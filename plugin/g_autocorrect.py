@@ -1,0 +1,177 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of pluma-grammalecte.
+#
+# pluma-grammalecte is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version.
+#
+# pluma-grammalecte is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# pluma-grammalecte. If not, see <http://www.gnu.org/licenses/>.
+#
+# Ce fichier fait partie de pluma-grammalecte.
+#
+# pluma-grammalecte est un logiciel libre ; vous pouvez le redistribuer ou le
+# modifier suivant les termes de la GNU General Public License telle que
+# publiée par la Free Software Foundation ; soit la version 3 de la licence,
+# soit (à votre gré) toute version ultérieure.
+#
+# pluma-grammalecte est distribué dans l'espoir qu'il sera utile, mais SANS
+# AUCUNE GARANTIE ; sans même la garantie tacite de QUALITÉ MARCHANDE ou
+# d'ADÉQUATION à UN BUT PARTICULIER. Consultez la GNU General Public License
+# pour plus de détails.
+#
+# Vous devez avoir reçu une copie de la GNU General Public License en même
+# temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
+# <http://www.gnu.org/licenses>.
+
+import pango
+
+from g_config import GrammalecteConfig
+from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
+
+class _GJsonEntry:
+	""" Entries of the Grammalecte JSON file """
+	GRAMMAR = "lGrammarErrors"
+	SPELLING = "lSpellingErrors"
+	LINE_START = "nStartY"
+	CHAR_START = "nStartX"
+	LINE_END = "nEndY"
+	CHAR_END = "nEndX"
+
+class _BufferData:
+	""" The data for the current buffer """
+	__TAG_GRAMMAR = "grammalecte_grammar"
+	__TAG_SPELLING = "grammalecte_spelling"
+
+	def __init__(self, vBuffer, callback):
+		""" Initialize the buffer data """
+		self.vBuffer = vBuffer
+		if self.vBuffer != None:
+			self.grammarTag, self.spellingTag = self.__init_tag(
+				[_BufferData.__TAG_GRAMMAR, _BufferData.__TAG_SPELLING])
+			self.__changedId = self.vBuffer.connect("changed", callback)
+
+	def __init_tag(self, tagNames):
+		""" Create error tags """
+		tags = []
+		for tagName in tagNames:
+			tag = self.vBuffer.get_tag_table().lookup(tagName)
+			if tag == None:
+				tag = self.vBuffer.create_tag(
+					tagName, underline = pango.UNDERLINE_ERROR)
+			tags.append(tag)
+		return tags
+
+	def terminate(self):
+		""" Terminate usage of this buffer data """
+		if self.vBuffer != None:
+			self.vBuffer.disconnect(self.__changedId)
+			self.clear_tags([self.grammarTag, self.spellingTag])
+			self.spellingTag = None
+			self.grammarTag = None
+			self.vBuffer = None
+
+	def clear_tags(self, tags):
+		""" Clear the tags from buffer """
+		for tag in tags:
+			if tag != None:
+				self.vBuffer.remove_tag(
+					tag,
+					self.vBuffer.get_start_iter(),
+					self.vBuffer.get_end_iter())
+
+class GrammalecteAutoCorrector(GrammalecteRequester):
+	""" The automatic corrector """
+	DATA_TAG = "GrammalecteAutoCorrector"
+
+	def __init__(self, view, analyzer):
+		""" Initialize the corrector """
+		self.__view = view
+		self.__analyzer = analyzer
+		self.__config = GrammalecteConfig(
+			self.__view.get_buffer().get_uri_for_display())
+		self.__requested = False
+		self.__curBuffer = None
+		self.__bufferData = _BufferData(
+			self.__view.get_buffer(), self.content_changed)
+		self.__bufferId = self.__view.connect(
+			"notify::buffer", self.buffer_changed)
+		self.__ask_request()
+
+	def deactivate(self):
+		""" Disconnect the corrector from the view """
+		self.__view.disconnect(self.__bufferId)
+		self.__bufferData.terminate()
+		self.__bufferData = None
+		self.__config.close()
+		self.__config = None
+		self.__analyzer = None
+		self.__view = None
+
+	def content_changed(self, *ignored):
+		""" Called when buffer content changed """
+		self.__ask_request()
+
+	def buffer_changed(self, *ignored):
+		""" Called when the buffer was changed """
+		self.__bufferData.terminate()
+		self.__bufferData = _BufferData(
+			self.__view.get_buffer(), self.content_changed)
+		self.__ask_request()
+
+	def __ask_request(self):
+		""" Called when request is needed """
+		if not self.__requested:
+			self.__requested = True
+			self.__analyzer.add_request(self)
+
+	def get_config(self):
+		""" Get the configuration for the requester """
+		return self.__config
+
+	def get_text(self):
+		""" Get the text of the requester """
+		self.__requested = False
+		if self.__bufferData == None:
+			return ""
+		else:
+			self.__curBuffer = self.__bufferData.vBuffer
+			return self.__curBuffer.get_slice(
+				self.__curBuffer.get_start_iter(),
+				self.__curBuffer.get_end_iter())
+
+	def result(self, result):
+		""" Set the result of the request """
+		if self.__curBuffer == self.__bufferData.vBuffer:
+			self.__bufferData.clear_tags(
+				[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
+			for parErrors in result:
+				for grammError in parErrors[_GJsonEntry.GRAMMAR]:
+					start, end = self.__extract_limits(grammError)
+					self.__curBuffer.apply_tag(
+						self.__bufferData.grammarTag, start, end)
+				for spellError in parErrors[_GJsonEntry.SPELLING]:
+					start, end = self.__extract_limits(spellError)
+					self.__curBuffer.apply_tag(
+						self.__bufferData.spellingTag, start, end)
+		self.__curBuffer = None
+
+	def __extract_limits(self, errorDesc):
+		""" Extract the limits from error description """
+		limits = []
+		for limitDesc in [
+			(_GJsonEntry.LINE_START, _GJsonEntry.CHAR_START),
+			(_GJsonEntry.LINE_END, _GJsonEntry.CHAR_END)]:
+			line, offset = limitDesc
+			iterator = self.__curBuffer.get_iter_at_line(errorDesc[line] - 1)
+			iterator.set_line_offset(errorDesc[offset])
+			limits.append(iterator)
+		return limits
+
