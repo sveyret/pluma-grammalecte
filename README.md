@@ -18,9 +18,9 @@ Toutefois, l'anglais étant la langue de la programmation, le code source, inclu
 
 # Licence
 
-:us: :gb:
-
 Copyright © 2016 Stéphane Veyret stephane_DOT_veyret_AT_neptura_DOT_org
+
+:us: :gb:
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -39,11 +39,13 @@ Vous devez avoir reçu une copie de la GNU General Public License en même temps
 # Pré-requis
 
 Pour utiliser ce greffon, vous devez avoir :
-* l'interface en ligne de commande pour Grammalecte installée sur la machine ;
-* une version de _pluma_ compilée avec la possibilité d'exécuter les greffons Python ;
+* l'interface en ligne de commande pour [Grammalecte](http://grammalecte.net/?download_div) téléchargée et installée sur la machine ;
+* une version de _pluma_ capable d'exécuter les greffons Python (cela peut nécessiter une compilation particulière) ;
 * et, bien sûr, les installations Python 2 et Python 3 nécessaires au fonctionnement de ces deux pré-requis.
 
 # Installation
+
+Téléchargez la version désirée sur [la page des _releases_](https://github.com/sveyret/pluma-grammalecte/releases), au format _zip_ ou _tar.gz_, puis décompressez-la dans le répertoire de votre choix.
 
 La compilation et l'installation du greffon se fait à l'aide des commandes :
 
@@ -58,7 +60,7 @@ Pour une installation en local, vous pouvez, par exemple, exécuter la commande�
 
     make && make LOCALE_INSTALL=$HOME/.local/share/locale PLUGIN_INSTALL=$HOME/.local/share install
 
-Dans ce dernier cas, il vous faudra modifier la configuration du greffon en éditant (ou créant, si nécessaire) le fichier `$HOME/.config/pluma/grammalecte.conf`. Ce fichier est au format JSON. Les valeur qui vous seront le plus utiles sont `locale-dir` pour indiquer le répertoire d'installation des traductions et `grammalecte-cli` si votre installation de l'interface de Grammalecte ne se trouve pas à l'emplacement prévu par défaut `/opt/grammalecte/cli.py`.
+Dans ce dernier cas, il vous faudra modifier la configuration du greffon en éditant (ou créant, si nécessaire) le fichier `$HOME/.config/pluma/grammalecte.conf`. Ce fichier est au format JSON. Les valeurs qui vous seront les plus utiles sont `locale-dir` pour indiquer le répertoire d'installation des traductions et `grammalecte-cli` si votre installation de l'interface de Grammalecte ne se trouve pas à l'emplacement prévu par défaut `/opt/grammalecte/cli.py`.
 
 Exemple :
 
@@ -67,7 +69,7 @@ Exemple :
 
 # Utilisation
 
-Pour le moment, le greffon se contente de souligner les erreurs d'orthographe ou grammaire dans _pluma_ lorsqu'il est activé.
+Pour le moment, le greffon se contente de souligner en temps réel (ou presque !) les erreurs d'orthographe ou grammaire dans _pluma_ lorsqu'il est activé.
 
 ## Configuration
 
@@ -85,14 +87,28 @@ Les paramètres configurables sont :
 * `grammalecte-analyze-params` qui contient les paramètres utilisés pour l'analyse par Grammalecte (pour utilisateurs avertis uniquement) ;
 * `grammalecte-analyze-timer` qui contient la fréquence de rafraichissement de Grammalecte (pour utilisateurs avertis uniquement).
 
-# Voir aussi
-
-Ce greffon _pluma_ s'appuie sur [l'analyseur grammatical Grammalecte](https://www.dicollecte.org/).
-
 # À faire
 
-- [ ] Faire tout l'IHM.
-- [ ] Trier les résultats ?
+## Version 0.2
+
+- [ ] Mettre la configuration locale dans les métadonnées du fichier.
+- [ ] Prévoir un bouton d'activation de la correction en temps réel.
+
+## Version 0.3
+
+- [ ] Ajouter l'IHM pour modifier la configuration de Grammalecte.
+
+### Version 0.4
+
+- [ ] Afficher une info-bulle sur les erreurs.
+- [ ] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
+
+### Version 1.0
+
+- [ ] Ajouter une correction interactive.
+
+### Autre
+
 - [ ] Se débarrasser de l'avertissement : g_autocorrect.py:174: GtkWarning: IA__gtk_text_iter_set_line_offset: assertion 'char_on_line <= chars_in_line' failed
   iterator.set_line_offset(errorDesc[offset])
 
