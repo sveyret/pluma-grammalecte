@@ -84,7 +84,7 @@ class TestGrammalecteAnalyzer(unittest.TestCase):
 
 	def test_analyze(self):
 		config = GrammalecteConfig()
-		if os.path.exists(config.get_value("grammalecte-cli")):
+		if os.path.exists(config.get_value(GrammalecteConfig.GRAMMALECTE_CLI)):
 			self.analyzer.add_request(self.requester)
 			self.mainloop.run()
 			self.assertEqual(self.requester.grammar_errors, 16)

@@ -236,7 +236,7 @@ class GrammalecteConfig(DictConfig):
 
 		>>> config = GrammalecteConfig()
 
-		>>> config.get_value("grammalecte-analyze-timer")
+		>>> config.get_value(GrammalecteConfig.AUTO_ANALYZE_TIMER)
 		500
 
 		>>> config.set_value("top/sub", ["zero", {"1st": "1", "other": "yes"}])
@@ -248,11 +248,17 @@ class GrammalecteConfig(DictConfig):
 	############
 	# ALL CONFIGURATION CONSTANTS ARE HERE
 	############
+	LOCALE_DIR = "locale-dir"
+	AUTO_ANALYZE_TIMER = "auto-analyze-timer"
+	GRAMMALECTE_PYTHON_EXE = "grammalecte-python-exe"
+	GRAMMALECTE_CLI = "grammalecte-cli"
+	GRAMMALECTE_ANALYZE_PARAMS = "grammalecte-analyze-params"
+
 	__DEFAULT_CONFIG = {
-		"grammalecte-python-exe": "python3",
-		"grammalecte-cli": "/opt/grammalecte/cli.py",
-		"grammalecte-analyze-params": ["-j", "-cl", "-owe", "-ctx"],
-		"grammalecte-analyze-timer": 500
+		AUTO_ANALYZE_TIMER: 500,
+		GRAMMALECTE_PYTHON_EXE: "python3",
+		GRAMMALECTE_CLI: "/opt/grammalecte/cli.py",
+		GRAMMALECTE_ANALYZE_PARAMS: ["-j", "-cl", "-owe", "-ctx"]
 	}
 
 	__PLUMA_CONFIG_FILE = "/pluma/grammalecte.conf"
@@ -298,7 +304,8 @@ class GrammalecteConfig(DictConfig):
 
 import gettext
 gettext.install("pluma-grammalecte",
-	localedir = GrammalecteConfig().get_value("locale-dir"), unicode = True)
+	localedir = GrammalecteConfig().get_value(
+		GrammalecteConfig.LOCALE_DIR), unicode = True)
 
 if __name__ == "__main__":
 	import doctest

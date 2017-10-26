@@ -192,9 +192,11 @@ class _StateWaiting(_State):
 		config = requester.get_config()
 		self._analyzer._input.write(requester.get_text())
 		processArgs = []
-		processArgs.append(config.get_value("grammalecte-python-exe"))
-		processArgs.append(config.get_value("grammalecte-cli"))
-		for arg in config.get_value("grammalecte-analyze-params"):
+		processArgs.append(config.get_value(
+			GrammalecteConfig.GRAMMALECTE_PYTHON_EXE))
+		processArgs.append(config.get_value(GrammalecteConfig.GRAMMALECTE_CLI))
+		for arg in config.get_value(
+			GrammalecteConfig.GRAMMALECTE_ANALYZE_PARAMS):
 			processArgs.append(arg)
 		processArgs.append("-f")
 		processArgs.append(self._analyzer._input.get_path())
@@ -257,7 +259,7 @@ class GrammalecteAnalyzer(object):
 		# Define timer
 		config = GrammalecteConfig()
 		gobject.timeout_add(
-			config.get_value("grammalecte-analyze-timer"),
+			config.get_value(GrammalecteConfig.AUTO_ANALYZE_TIMER),
 			self.__run)
 
 	def __run(self):
