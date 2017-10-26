@@ -64,8 +64,8 @@ class DictConfig:
 			:type data: dict, str
 			:type parent: DictConfig, None
 		"""
-		self.parent = parent
-		self.dirty = False
+		self.__parent = parent
+		self.__dirty = False
 		if data == None:
 			self.__init_config({})
 		elif type(data) is str:
@@ -82,12 +82,12 @@ class DictConfig:
 			:param filename: the full name of the file.
 			:type filename: str
 		"""
-		self.filename = filename
-		self.config = {}
+		self.__filedef = filename
+		self.__config = {}
 		try:
-			if os.path.exists(self.filename):
-				with open(self.filename, 'r') as cfile:
-					self.config = json.loads(cfile.read())
+			if os.path.exists(self.__filedef):
+				with open(self.__filedef, 'r') as cfile:
+					self.__config = json.loads(cfile.read())
 		except:
 			pass
 
@@ -98,8 +98,8 @@ class DictConfig:
 			:param config: the read-only configuration.
 			:type config: dict
 		"""
-		self.filename = None
-		self.config = config
+		self.__filedef = None
+		self.__config = config
 
 	def get_value(self, xPath):
 		"""
@@ -115,8 +115,8 @@ class DictConfig:
 			:rtype: any
 		"""
 		result = self.__find(xPath)
-		if result == None and self.parent != None:
-			result = self.parent.get_value(xPath)
+		if result == None and self.__parent != None:
+			result = self.__parent.get_value(xPath)
 		return result
 
 	def set_value(self, xPath, newValue, level = 0):
@@ -138,10 +138,10 @@ class DictConfig:
 		if level == 0:
 			if self.__find(xPath) != newValue:
 				self.__update(xPath, newValue)
-				self.dirty = True
+				self.__dirty = True
 		else:
-			if self.parent != None:
-				self.parent.set_value(xPath, newValue, level - 1)
+			if self.__parent != None:
+				self.__parent.set_value(xPath, newValue, level - 1)
 
 	def __find(self, xPath):
 		"""
@@ -155,7 +155,7 @@ class DictConfig:
 			:return: the value at matching position, or None.
 			:rtype: any
 		"""
-		value = self.config
+		value = self.__config
 		try:
 			for name in xPath.strip("/").split("/"):
 				try:
@@ -180,7 +180,7 @@ class DictConfig:
 			:type xPath: str
 			:type newValue: any
 		"""
-		entry = self.config
+		entry = self.__config
 		oldName = None
 		try:
 			for name in xPath.strip("/").split("/"):
@@ -207,19 +207,23 @@ class DictConfig:
 			.. note:: A closed configuration can still be used, but should be
 			closed again after.
 		"""
-		if self.parent != None:
-			self.parent.close()
-		if self.filename != None and self.dirty:
-			try:
-				configDir = os.path.dirname(self.filename)
-				if not os.path.isdir(configDir):
-					os.makedirs(configDir)
-				with open(self.filename, 'w') as cfile:
-					json.dump(self.config, cfile)
-				self.dirty = False
-			except:
-				print _("Error: configuration file “{}” could not be saved") \
-					.format(self.filename)
+		if self.__parent != None:
+			self.__parent.close()
+		if self.__filedef != None and self.__dirty:
+			self.__save_file()
+
+	def __save_file(self):
+		""" Save configuration as file """
+		try:
+			configDir = os.path.dirname(self.__filedef)
+			if not os.path.isdir(configDir):
+				os.makedirs(configDir)
+			with open(self.__filedef, 'w') as cfile:
+				json.dump(self.__config, cfile, indent = 2)
+			self.__dirty = False
+		except:
+			print _("Error: configuration file “{}” could not be saved") \
+				.format(self.__filedef)
 
 class GrammalecteConfig(DictConfig):
 	"""
