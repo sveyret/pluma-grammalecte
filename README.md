@@ -91,11 +91,6 @@ Les paramètres configurables sont :
 
 # À faire
 
-## Version 0.2
-
-- [x] Mettre la configuration locale dans les métadonnées du fichier.
-- [x] Prévoir un bouton d'activation de la correction en temps réel.
-
 ## Version 0.3
 
 - [ ] Ajouter l'IHM pour modifier la configuration de Grammalecte.
