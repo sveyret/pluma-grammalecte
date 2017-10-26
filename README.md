@@ -41,7 +41,7 @@ Vous devez avoir reçu une copie de la GNU General Public License en même temps
 Pour utiliser ce greffon, vous devez avoir :
 * l'interface en ligne de commande pour [Grammalecte](http://grammalecte.net/?download_div) téléchargée et installée sur la machine ;
 * une version de _pluma_ capable d'exécuter les greffons Python (cela peut nécessiter une compilation particulière) ;
-* et, bien sûr, les installations Python 2 et Python 3 nécessaires au fonctionnement de ces deux pré-requis.
+* et, bien sûr, les installations Python 2 (2.7 minimum) et Python 3 (3.3 minimum) nécessaires au fonctionnement de ces deux pré-requis.
 
 # Installation
 
@@ -69,7 +69,7 @@ Exemple :
 
 # Utilisation
 
-Pour le moment, le greffon se contente de souligner en temps réel (ou presque !) les erreurs d'orthographe ou grammaire dans _pluma_ lorsqu'il est activé.
+Pour le moment, le greffon se contente de souligner en temps réel (ou presque !) les erreurs d'orthographe ou grammaire dans _pluma_ lorsque la vérification automatique est activée. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
 
 ## Configuration
 
@@ -81,13 +81,14 @@ La configuration de Grammalecte est écrite dans des fichiers JSON. Ces fichiers
 Chaque fichier de configuration peut surcharger les valeurs présentes dans le fichier plus global. À contrario, une valeur non définie dans le fichier plus précis sera recherchée dans le fichier plus global.
 
 Les paramètres configurables sont :
-* `grammalecte-cli` qui contient le chemin complet vers la ligne de commande de Grammalecte ;
 * `locale-dir` qui contient le chemin vers le répertoire des traductions ;
-* `grammalecte-python-exe` qui contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
-* `grammalecte-analyze-params`<sup>*</sup> qui contient les paramètres utilisés pour l'analyse par Grammalecte ;
+* `auto-analyze-active` qui indique si la vérification automatique est activée ou non ;
 * `auto-analyze-timer`<sup>*</sup> qui contient la fréquence de rafraichissement pour l'analyse automatique.
+* `grammalecte-python-exe` qui contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
+* `grammalecte-cli` qui contient le chemin complet vers la ligne de commande de Grammalecte ;
+* `grammalecte-analyze-params`<sup>*</sup> qui contient les paramètres utilisés pour l'analyse par Grammalecte ;
 
-[*] Pour utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
+[*] Les options marquées d'un <sup>*</sup> sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
 
 # À faire
 
