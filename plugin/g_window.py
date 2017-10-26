@@ -35,7 +35,7 @@ import gtk
 
 from g_config import GrammalecteConfig
 from g_analyzer import GrammalecteAnalyzer
-from g_autocorrect import GrammalecteAutoCorrector
+from g_view import GrammalecteViewHelper
 
 #<menuitem name="CheckGrammalecte" action="CheckGrammalecte"/>
 #<menuitem name="ConfigGrammalecte" action="ConfigGrammalecte"/>
@@ -112,35 +112,55 @@ class GrammalecteWindowHelper:
 
 	def update_ui(self):
 		""" UI update requested """
-		pass
+		tab = self.__window.get_active_tab()
+		view = None if tab == None else tab.get_view()
+		helper = None if view == None else view.get_data(
+			GrammalecteViewHelper.DATA_TAG)
+		sensitive = helper != None and not helper.is_readonly()
+		autoActive = helper != None and helper.get_config().get_value(
+			GrammalecteConfig.AUTO_ANALYZE_ACTIVE)
+		self.__actionGroup.set_sensitive(sensitive)
+		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
 
 	def cb_tab_added(self, action, tab):
 		""" Mange the tab added event """
 		self.__associate(tab.get_view())
+		self.update_ui()
 
 	def cb_tab_removed(self, action, tab):
 		""" Manage the tab removed event """
 		self.__deassociate(tab.get_view())
+		self.update_ui()
 
 	def __associate(self, view):
-		""" Associate view and corrector """
-		view.set_data(
-			GrammalecteAutoCorrector.DATA_TAG,
-			GrammalecteAutoCorrector(view, self.__analyzer))
+		""" Associate view and helper """
+		helper = view.get_data(GrammalecteViewHelper.DATA_TAG)
+		if helper == None:
+			helper = GrammalecteViewHelper(view, view.get_buffer(), self)
+			view.set_data(GrammalecteViewHelper.DATA_TAG, helper)
 
 	def __deassociate(self, view):
-		""" Deassociate view and corrector, if any """
-		helper = view.get_data(GrammalecteAutoCorrector.DATA_TAG)
+		""" Deassociate view and helper, if any """
+		helper = view.get_data(GrammalecteViewHelper.DATA_TAG)
 		if helper != None:
 			helper.deactivate()
-			view.set_data(GrammalecteAutoCorrector.DATA_TAG, None)
+			view.set_data(GrammalecteViewHelper.DATA_TAG, None)
 
 	def cb_menu_check(self, action):
 		pass
 
 	def cb_menu_auto(self, action):
-		pass
+		""" Manage automatic toggle menu """
+		tab = self.__window.get_active_tab()
+		view = None if tab == None else tab.get_view()
+		helper = None if view == None else view.get_data(
+			GrammalecteViewHelper.DATA_TAG)
+		if helper != None and not helper.is_readonly():
+			helper.set_auto_analyze(action.get_active())
 
 	def cb_menu_config(self, action):
 		pass
+
+	def get_analyzer(self):
+		return self.__analyzer
 

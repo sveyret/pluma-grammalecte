@@ -89,31 +89,25 @@ class _BufferData:
 
 class GrammalecteAutoCorrector(GrammalecteRequester):
 	""" The automatic corrector """
-	DATA_TAG = "GrammalecteAutoCorrector"
-
-	def __init__(self, view, analyzer):
+	def __init__(self, viewHelper):
 		""" Initialize the corrector """
-		self.__view = view
-		self.__analyzer = analyzer
-		self.__config = GrammalecteConfig(
-			self.__view.get_buffer().get_uri_for_display())
+		self.__viewHelper = viewHelper
 		self.__requested = False
 		self.__curBuffer = None
+		view = self.__viewHelper.get_view()
 		self.__bufferData = _BufferData(
-			self.__view.get_buffer(), self.cb_content_changed)
-		self.__eventBufferId = self.__view.connect(
+			view.get_buffer(), self.cb_content_changed)
+		self.__eventBufferId = view.connect(
 			"notify::buffer", self.cb_buffer_changed)
 		self.__ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
-		self.__view.disconnect(self.__eventBufferId)
+		view = self.__viewHelper.get_view()
+		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
 		self.__bufferData = None
-		self.__config.close()
-		self.__config = None
-		self.__analyzer = None
-		self.__view = None
+		self.__viewHelper = None
 
 	def cb_content_changed(self, *ignored):
 		""" Called when buffer content changed """
@@ -123,18 +117,19 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		""" Called when the buffer was changed """
 		self.__bufferData.terminate()
 		self.__bufferData = _BufferData(
-			self.__view.get_buffer(), self.cb_content_changed)
+			self.__viewHelper.get_view().get_buffer(), self.cb_content_changed)
 		self.__ask_request()
 
 	def __ask_request(self):
 		""" Called when request is needed """
 		if not self.__requested:
 			self.__requested = True
-			self.__analyzer.add_request(self)
+			self.__viewHelper.get_analyzer().add_request(self)
 
 	def get_config(self):
 		""" Get the configuration for the requester """
-		return self.__config
+		return None if self.__viewHelper == None else \
+			self.__viewHelper.get_config()
 
 	def get_text(self):
 		""" Get the text of the requester """
@@ -149,7 +144,8 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def cb_result(self, result):
 		""" Set the result of the request """
-		if self.__curBuffer == self.__bufferData.vBuffer:
+		if self.__bufferData != None and \
+			self.__curBuffer == self.__bufferData.vBuffer:
 			self.__bufferData.clear_tags(
 				[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
 			for parErrors in result:

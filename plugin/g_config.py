@@ -311,12 +311,14 @@ class GrammalecteConfig(DictConfig):
 	# ALL CONFIGURATION CONSTANTS ARE HERE
 	############
 	LOCALE_DIR = "locale-dir"
+	AUTO_ANALYZE_ACTIVE = "auto-analyze-active"
 	AUTO_ANALYZE_TIMER = "auto-analyze-timer"
 	GRAMMALECTE_PYTHON_EXE = "grammalecte-python-exe"
 	GRAMMALECTE_CLI = "grammalecte-cli"
 	GRAMMALECTE_ANALYZE_PARAMS = "grammalecte-analyze-params"
 
 	__DEFAULT_CONFIG = {
+		AUTO_ANALYZE_ACTIVE: False,
 		AUTO_ANALYZE_TIMER: 500,
 		GRAMMALECTE_PYTHON_EXE: "python3",
 		GRAMMALECTE_CLI: "/opt/grammalecte/cli.py",
@@ -326,17 +328,15 @@ class GrammalecteConfig(DictConfig):
 	__PLUMA_CONFIG_FILE = "/pluma/grammalecte.conf"
 	__SYSTEM_CONFIG_FILE = "/etc" + __PLUMA_CONFIG_FILE
 	__USER_CONFIG_FILE = glib.get_user_config_dir() + __PLUMA_CONFIG_FILE
-	__LOCAL_CONFIG_FILE = "{}/.{}-grammalecte"
 
 	__globalInstance = None
 
-	def __init__(self, localFile = None):
+	def __init__(self, selfConfig = None):
 		"""
 			Initialize the plugin configuration.
 
-			:param localFile: (optional) the path to the currently edited local
-			file.
-			:type localFile: str
+			:param selfConfig: (optional) the selfConfig container.
+			:type selfConfig: SelfConfigContainer
 		"""
 		# Initialize global instance
 		if GrammalecteConfig.__globalInstance == None:
@@ -347,11 +347,7 @@ class GrammalecteConfig(DictConfig):
 				DictConfig(GrammalecteConfig.__USER_CONFIG_FILE, systemConfig)
 
 		# Initialize local instance
-		configFile = None if localFile == None \
-			else GrammalecteConfig.__LOCAL_CONFIG_FILE.format(
-				os.path.dirname(localFile), os.path.basename(localFile))
-		DictConfig.__init__(
-			self, configFile, GrammalecteConfig.__globalInstance)
+		DictConfig.__init__(self, selfConfig, GrammalecteConfig.__globalInstance)
 
 	@staticmethod
 	def terminate():

@@ -76,7 +76,7 @@ Pour le moment, le greffon se contente de souligner en temps réel (ou presque 
 La configuration de Grammalecte est écrite dans des fichiers JSON. Ces fichiers se trouvent :
 * pour la configuration globale au système, dans `/etc/pluma/grammalecte.conf` ;
 * pour la configuration spécifique à l'utilisateur, dans `$HOME/.config/pluma/grammalecte.conf` ;
-* pour la configuration spécifique à un fichier, dans un fichier (caché) nommé comme le fichier, mais préfixé par un point et suffixé par `-grammalecte`.
+* pour la configuration spécifique à un fichier, dans les métadonnées du fichier.
 
 Chaque fichier de configuration peut surcharger les valeurs présentes dans le fichier plus global. À contrario, une valeur non définie dans le fichier plus précis sera recherchée dans le fichier plus global.
 
@@ -93,8 +93,8 @@ Les paramètres configurables sont :
 
 ## Version 0.2
 
-- [ ] Mettre la configuration locale dans les métadonnées du fichier.
-- [ ] Prévoir un bouton d'activation de la correction en temps réel.
+- [x] Mettre la configuration locale dans les métadonnées du fichier.
+- [x] Prévoir un bouton d'activation de la correction en temps réel.
 
 ## Version 0.3
 

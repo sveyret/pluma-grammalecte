@@ -190,6 +190,8 @@ class _StateWaiting(_State):
 		""" Initialize the next state """
 		requester = self._analyzer._queue.get()
 		config = requester.get_config()
+		if config == None:
+			return self
 		self._analyzer._input.write(requester.get_text())
 		processArgs = []
 		processArgs.append(config.get_value(

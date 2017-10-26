@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-25 14:55+0200\n"
+"POT-Creation-Date: 2017-10-26 15:16+0200\n"
 "PO-Revision-Date: 2017-10-21 21:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,20 +17,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: plugin/g_analyzer.py:233
+#: plugin/g_analyzer.py:235
 msgid ""
 "Error: Grammalecte process did not terminate properly:\n"
 "{}"
-msgstr "Erreur : le processus Grammalecte ne s'est pas terminé correctement :\n{}"
+msgstr ""
+"Erreur : le processus Grammalecte ne s'est pas terminé correctement :\n"
+"{}"
 
-#: plugin/g_analyzer.py:287
+#: plugin/g_analyzer.py:275
 msgid "Exception: {}"
 msgstr "Exception : {}"
 
-#: plugin/g_config.py:221
+#: plugin/g_config.py:279
 msgid "Error: configuration file “{}” could not be saved"
 msgstr "Erreur : le fichier de configuration « {} » n'a pas pu être enregistré"
 
-#: plugin/g_config.py:286
+#: plugin/g_config.py:288
 msgid "Error: configuration could not be saved"
 msgstr "Erreur : la configuration n'a pas pu être enregistrée"
+
+#: plugin/g_window.py:87
+msgid "_Check Syntax..."
+msgstr "_Vérification syntaxique..."
+
+#: plugin/g_window.py:89
+msgid "Check the current document for incorrect grammar and spelling"
+msgstr ""
+"Vérifie les erreurs de grammaire et d'orthographe dans le document actuel"
+
+#: plugin/g_window.py:93
+msgid "Configure _Grammalecte..."
+msgstr "Configurer _Grammalecte..."
+
+#: plugin/g_window.py:95
+msgid "Configure the Grammalecte rules"
+msgstr "Configurer les règles de Grammalecte"
+
+#: plugin/g_window.py:99
+msgid "_Autocheck Syntax"
+msgstr "Vérification _automatique"
+
+#: plugin/g_window.py:101
+msgid "Automatically grammar and spell-check the current document"
+msgstr ""
+"Vérifie automatiquement la grammaire et l'orthographe du document actuel"
