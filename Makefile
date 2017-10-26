@@ -93,7 +93,7 @@ clean:
 	rm -f po/*~
 
 mrproper: clean
-	rm -rf $(TARGET)
+	rm -rf $(TARGET_DIR)
 
 .PHONY: all check install clean mrproper
 
