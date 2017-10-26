@@ -31,9 +31,25 @@
 # temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
 # <http://www.gnu.org/licenses>.
 
+import gtk
+
 from g_config import GrammalecteConfig
 from g_analyzer import GrammalecteAnalyzer
 from g_autocorrect import GrammalecteAutoCorrector
+
+#<menuitem name="CheckGrammalecte" action="CheckGrammalecte"/>
+#<menuitem name="ConfigGrammalecte" action="ConfigGrammalecte"/>
+_ui_str = """
+<ui>
+	<menubar name="MenuBar">
+		<menu name="ToolsMenu" action="Tools">
+			<placeholder name="ToolsOps_1">
+				<menuitem name="AutoGrammalecte" action="AutoGrammalecte"/>
+			</placeholder>
+		</menu>
+	</menubar>
+</ui>
+"""
 
 class GrammalecteWindowHelper:
 	""" The Window helper """
@@ -49,9 +65,11 @@ class GrammalecteWindowHelper:
 			self.__associate(view)
 		self.__eventTabAddedId = self.__window.connect(
 			"tab-added", self.cb_tab_added)
+		self.__insert_menu()
 
 	def deactivate(self):
 		""" Deactivate the helper """
+		self.__remove_menu()
 		self.__window.disconnect(self.__eventTabAddedId)
 		for view in self.__window.get_views():
 			self.__deassociate(view)
@@ -59,6 +77,38 @@ class GrammalecteWindowHelper:
 		self.__analyzer.terminate()
 		self.__analyzer = None
 		self.__window = None
+
+	def __insert_menu(self):
+		""" Insert the Grammalecte menu """
+		manager = self.__window.get_ui_manager()
+		self.__actionGroup = gtk.ActionGroup("GrammalecteActions")
+		self.__actionGroup.add_actions([("CheckGrammalecte",
+			gtk.STOCK_SPELL_CHECK,
+			_("_Check Syntax..."),
+			"<shift>F7",
+			_("Check the current document for incorrect grammar and spelling"),
+			self.cb_menu_check),
+			('ConfigGrammalecte',
+			None,
+			_('Configure _Grammalecte...'),
+			None,
+			_("Configure the Grammalecte rules"),
+			self.cb_menu_config)])
+		self.__actionGroup.add_toggle_actions([('AutoGrammalecte',
+			None,
+			_('_Autocheck Syntax'),
+			None,
+			_("Automatically grammar and spell-check the current document"),
+			self.cb_menu_auto)])
+		manager.insert_action_group(self.__actionGroup, -1)
+		self.__uiId = manager.add_ui_from_string(_ui_str)
+
+	def __remove_menu(self):
+		""" Remove the menu """
+		manager = self.__window.get_ui_manager()
+		manager.remove_ui(self.__uiId)
+		manager.remove_action_group(self.__actionGroup)
+		manager.ensure_update()
 
 	def update_ui(self):
 		""" UI update requested """
@@ -84,4 +134,13 @@ class GrammalecteWindowHelper:
 		if helper != None:
 			helper.deactivate()
 			view.set_data(GrammalecteAutoCorrector.DATA_TAG, None)
+
+	def cb_menu_check(self, action):
+		pass
+
+	def cb_menu_auto(self, action):
+		pass
+
+	def cb_menu_config(self, action):
+		pass
 
