@@ -84,8 +84,10 @@ Les paramètres configurables sont :
 * `grammalecte-cli` qui contient le chemin complet vers la ligne de commande de Grammalecte ;
 * `locale-dir` qui contient le chemin vers le répertoire des traductions ;
 * `grammalecte-python-exe` qui contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
-* `grammalecte-analyze-params` qui contient les paramètres utilisés pour l'analyse par Grammalecte (pour utilisateurs avertis uniquement) ;
-* `grammalecte-analyze-timer` qui contient la fréquence de rafraichissement de Grammalecte (pour utilisateurs avertis uniquement).
+* `grammalecte-analyze-params`<sup>*</sup> qui contient les paramètres utilisés pour l'analyse par Grammalecte ;
+* `auto-analyze-timer`<sup>*</sup> qui contient la fréquence de rafraichissement pour l'analyse automatique.
+
+[*] Pour utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
 
 # À faire
 
@@ -111,4 +113,5 @@ Les paramètres configurables sont :
 
 - [ ] Se débarrasser de l'avertissement : g_autocorrect.py:174: GtkWarning: IA__gtk_text_iter_set_line_offset: assertion 'char_on_line <= chars_in_line' failed
   iterator.set_line_offset(errorDesc[offset])
+- [ ] Optimiser la correction (n'envoyer qu'un seul paragraphe lorsque possible).
 
