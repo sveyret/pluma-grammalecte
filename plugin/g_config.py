@@ -41,13 +41,48 @@ import glib
 import json
 import os
 
+class SelfConfigContainer:
+	"""
+		An object containing its configuration.
+
+		A class inheriting from this one should manage itself the storage of
+		its configuration (as a JSON string). This is useful for example for an
+		object managing file metadata.
+	"""
+
+	EMPTY = "{}"
+
+	def get_self_config(self):
+		"""
+			Get the configuration of the object.
+
+			The configuration is a string parsable in JSON.
+
+			:return: the configuration of the object.
+			:rtype: str
+		"""
+		pass
+
+	def set_self_config(self, config):
+		"""
+			Set the configuration of the object.
+
+			The configuration is a string parsable in JSON.
+
+			:param config: the configuration of the object.
+			:type config: str
+		"""
+		pass
+
 class DictConfig:
 	"""
 		A configuration stored as a dictionnary.
 
 		The configuration can be initialized with a dictionnary or with a JSON
 		formatted file. In the latter case, modifications made to the
-		configuration will be saved to the file.
+		configuration will be saved to the file. The file storage may be
+		managed by an external object, useful for example to store the
+		configuration in a document metadata.
 		The configuration can have a parent, which is used when a value in
 		child is None for a given path.
 		Configuration values are accessed throw xPath-like definition.
@@ -72,6 +107,8 @@ class DictConfig:
 			self.__init_file(data)
 		elif type(data) is dict:
 			self.__init_config(data)
+		elif isinstance(data, SelfConfigContainer):
+			self.__init_self_config(data)
 		else:
 			raise AttributeError
 
@@ -100,6 +137,20 @@ class DictConfig:
 		"""
 		self.__filedef = None
 		self.__config = config
+
+	def __init_self_config(self, selfConfig):
+		"""
+			Initialize the instance with a self config container.
+
+			:param selfConfig: the object.
+			:type selfConfig: SelfConfigContainer
+		"""
+		self.__filedef = selfConfig
+		self.__config = {}
+		try:
+			self.__config = json.loads(self.__filedef.get_self_config())
+		except:
+			pass
 
 	def get_value(self, xPath):
 		"""
@@ -210,7 +261,10 @@ class DictConfig:
 		if self.__parent != None:
 			self.__parent.close()
 		if self.__filedef != None and self.__dirty:
-			self.__save_file()
+			if type(self.__filedef) is str:
+				self.__save_file()
+			else:
+				self.__save_self_config()
 
 	def __save_file(self):
 		""" Save configuration as file """
@@ -224,6 +278,14 @@ class DictConfig:
 		except:
 			print _("Error: configuration file “{}” could not be saved") \
 				.format(self.__filedef)
+
+	def __save_self_config(self):
+		""" Save configuration as metadata """
+		try:
+			self.__filedef.set_self_config(json.dumps(
+				self.__config, separators = (",", ":")))
+		except:
+			print _("Error: configuration could not be saved")
 
 class GrammalecteConfig(DictConfig):
 	"""
