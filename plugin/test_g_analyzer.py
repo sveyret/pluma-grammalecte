@@ -63,7 +63,8 @@ class MockRequester(GrammalecteRequester):
 		""" Set the result of the request """
 		for err_in_paragraph in result:
 			for grammar_error in err_in_paragraph["lGrammarErrors"]:
-				print grammar_error["sBefore"], "[", grammar_error["sUnderlined"], "]", grammar_error["sAfter"]
+				print grammar_error["sBefore"], "[", \
+					grammar_error["sUnderlined"], "]", grammar_error["sAfter"]
 				print "Règle :", grammar_error["sMessage"]
 				print "Suggestions :", grammar_error["aSuggestions"]
 				self.grammar_errors += 1

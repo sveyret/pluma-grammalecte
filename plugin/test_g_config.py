@@ -37,8 +37,11 @@ from g_config import DictConfig
 
 class TestDictConfig(unittest.TestCase):
 	def setUp(self):
-		self.defaultConfig = DictConfig({"key0": "value0", "key1": "invisible"})
-		self.config = DictConfig({"key1": "value1", "key2": {"key21": ["value21a", "value21b"], "key22": "value22"}, "key3": "value3"}, self.defaultConfig)
+		self.defaultConfig = DictConfig({"key0": "value0",
+			"key1": "invisible"})
+		self.config = DictConfig({"key1": "value1",
+			"key2": {"key21": ["value21a", "value21b"], "key22": "value22"},
+			"key3": "value3"}, self.defaultConfig)
 
 	def test_get_simple_value(self):
 		self.assertEqual(self.config.get_value("key3"), "value3")
@@ -55,7 +58,8 @@ class TestDictConfig(unittest.TestCase):
 		self.assertEqual(self.defaultConfig.get_value("key1"), "invisible")
 
 	def test_set_complex_value(self):
-		self.config.set_value("key2/key21/0", {"a": "newValuea", "b": "newValueb"})
+		self.config.set_value("key2/key21/0", {"a": "newValuea",
+			"b": "newValueb"})
 		self.assertEqual(self.config.get_value("key2/key21/0/b"), "newValueb")
 
 	def test_set_default_value(self):
