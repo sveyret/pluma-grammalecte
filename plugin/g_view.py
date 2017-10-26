@@ -90,11 +90,12 @@ class GrammalecteViewHelper(SelfConfigContainer):
 			self.__autocorrect.deactivate()
 			self.__autocorrect = None
 
-	def cb_doc_saved(self, error):
+	def cb_doc_saved(self, document, error):
 		""" Manage the document saved event """
 		if error == None:
-			filename = self.__document.get_uri()
-			self.__gFile = None if filename is None else gio.File(filename)
+			self.__filename = self.__document.get_uri()
+			self.__gFile = None if self.__filename is None else \
+				gio.File(self.__filename)
 
 	def cb_doc_loaded(self, document, error):
 		""" Manage the document loaded event """
