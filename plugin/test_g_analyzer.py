@@ -59,7 +59,7 @@ class MockRequester(GrammalecteRequester):
 		""" Get the configuration for the requester """
 		return self.config
 
-	def result(self, result):
+	def cb_result(self, result):
 		""" Set the result of the request """
 		for err_in_paragraph in result:
 			for grammar_error in err_in_paragraph["lGrammarErrors"]:

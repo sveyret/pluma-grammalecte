@@ -56,7 +56,7 @@ class _BufferData:
 		if self.vBuffer != None:
 			self.grammarTag, self.spellingTag = self.__init_tag(
 				[_BufferData.__TAG_GRAMMAR, _BufferData.__TAG_SPELLING])
-			self.__changedId = self.vBuffer.connect("changed", callback)
+			self.__eventChangedId = self.vBuffer.connect("changed", callback)
 
 	def __init_tag(self, tagNames):
 		""" Create error tags """
@@ -72,7 +72,7 @@ class _BufferData:
 	def terminate(self):
 		""" Terminate usage of this buffer data """
 		if self.vBuffer != None:
-			self.vBuffer.disconnect(self.__changedId)
+			self.vBuffer.disconnect(self.__eventChangedId)
 			self.clear_tags([self.grammarTag, self.spellingTag])
 			self.spellingTag = None
 			self.grammarTag = None
@@ -100,14 +100,14 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__requested = False
 		self.__curBuffer = None
 		self.__bufferData = _BufferData(
-			self.__view.get_buffer(), self.content_changed)
-		self.__bufferId = self.__view.connect(
-			"notify::buffer", self.buffer_changed)
+			self.__view.get_buffer(), self.cb_content_changed)
+		self.__eventBufferId = self.__view.connect(
+			"notify::buffer", self.cb_buffer_changed)
 		self.__ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
-		self.__view.disconnect(self.__bufferId)
+		self.__view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
 		self.__bufferData = None
 		self.__config.close()
@@ -115,15 +115,15 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__analyzer = None
 		self.__view = None
 
-	def content_changed(self, *ignored):
+	def cb_content_changed(self, *ignored):
 		""" Called when buffer content changed """
 		self.__ask_request()
 
-	def buffer_changed(self, *ignored):
+	def cb_buffer_changed(self, *ignored):
 		""" Called when the buffer was changed """
 		self.__bufferData.terminate()
 		self.__bufferData = _BufferData(
-			self.__view.get_buffer(), self.content_changed)
+			self.__view.get_buffer(), self.cb_content_changed)
 		self.__ask_request()
 
 	def __ask_request(self):
@@ -147,7 +147,7 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 				self.__curBuffer.get_start_iter(),
 				self.__curBuffer.get_end_iter())
 
-	def result(self, result):
+	def cb_result(self, result):
 		""" Set the result of the request """
 		if self.__curBuffer == self.__bufferData.vBuffer:
 			self.__bufferData.clear_tags(

@@ -43,18 +43,19 @@ class GrammalecteWindowHelper:
 		""" Initialize the helper """
 		self.__window = window
 		self.__analyzer = GrammalecteAnalyzer()
-		self.__tabRemovedId = \
-			self.__window.connect("tab-removed", self.tab_removed)
+		self.__eventTabRemovedId = self.__window.connect(
+			"tab-removed", self.cb_tab_removed)
 		for view in self.__window.get_views():
 			self.__associate(view)
-		self.__tabAddedId = self.__window.connect("tab-added", self.tab_added)
+		self.__eventTabAddedId = self.__window.connect(
+			"tab-added", self.cb_tab_added)
 
 	def deactivate(self):
 		""" Deactivate the helper """
-		self.__window.disconnect(self.__tabAddedId)
+		self.__window.disconnect(self.__eventTabAddedId)
 		for view in self.__window.get_views():
 			self.__deassociate(view)
-		self.__window.disconnect(self.__tabRemovedId)
+		self.__window.disconnect(self.__eventTabRemovedId)
 		self.__analyzer.terminate()
 		self.__analyzer = None
 		self.__window = None
@@ -63,12 +64,12 @@ class GrammalecteWindowHelper:
 		""" UI update requested """
 		pass
 
-	def tab_added(self, action, tab):
-		""" Tab added event """
+	def cb_tab_added(self, action, tab):
+		""" Mange the tab added event """
 		self.__associate(tab.get_view())
 
-	def tab_removed(self, action, tab):
-		""" Tab removed event """
+	def cb_tab_removed(self, action, tab):
+		""" Manage the tab removed event """
 		self.__deassociate(tab.get_view())
 
 	def __associate(self, view):

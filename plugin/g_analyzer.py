@@ -67,7 +67,7 @@ class GrammalecteRequester:
 		"""
 		pass
 
-	def result(self, result):
+	def cb_result(self, result):
 		"""
 			Give the result of the request.
 
@@ -232,7 +232,7 @@ class _StateAnalyzing(_State):
 				" properly:\n{}").format(self._analyzer._error.read())
 		self._analyzer._output.close()
 		self._analyzer._error.close()
-		self.__requester.result(result)
+		self.__requester.cb_result(result)
 		return _StateWaiting(self._analyzer)
 
 class GrammalecteAnalyzer(object):
