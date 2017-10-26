@@ -87,7 +87,7 @@ class TestGrammalecteAnalyzer(unittest.TestCase):
 		if os.path.exists(config.get_value("grammalecte-cli")):
 			self.analyzer.add_request(self.requester)
 			self.mainloop.run()
-			self.assertEqual(self.requester.grammar_errors, 17)
+			self.assertEqual(self.requester.grammar_errors, 16)
 			self.assertEqual(self.requester.spelling_errors, 2)
 		else:
 			print "WARNING: Grammalecte not found, tests skipped"
