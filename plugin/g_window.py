@@ -44,7 +44,9 @@ _ui_str = """
 	<menubar name="MenuBar">
 		<menu name="ToolsMenu" action="Tools">
 			<placeholder name="ToolsOps_1">
+				<separator />
 				<menuitem name="AutoGrammalecte" action="AutoGrammalecte"/>
+				<separator />
 			</placeholder>
 		</menu>
 	</menubar>
