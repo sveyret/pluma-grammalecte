@@ -31,11 +31,12 @@
 # temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
 # <http://www.gnu.org/licenses>.
 
-import unittest
 import gobject
 import os
+import unittest
 
 from g_config import GrammalecteConfig
+
 from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
 
 class MockRequester(GrammalecteRequester):

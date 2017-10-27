@@ -34,6 +34,7 @@
 import pluma
 
 from g_config import GrammalecteConfig
+
 from g_window import GrammalecteWindowHelper
 
 class GrammalectePlugin(pluma.Plugin):

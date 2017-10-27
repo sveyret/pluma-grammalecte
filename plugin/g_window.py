@@ -34,6 +34,7 @@
 import gtk
 
 from g_config import GrammalecteConfig
+
 from g_analyzer import GrammalecteAnalyzer
 from g_view import GrammalecteViewHelper
 

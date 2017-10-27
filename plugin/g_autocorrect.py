@@ -34,6 +34,7 @@
 import pango
 
 from g_config import GrammalecteConfig
+
 from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
 
 class _GJsonEntry:

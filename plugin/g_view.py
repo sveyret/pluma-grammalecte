@@ -34,6 +34,7 @@
 import gio
 
 from g_config import SelfConfigContainer, GrammalecteConfig
+
 from g_autocorrect import GrammalecteAutoCorrector
 
 class GrammalecteViewHelper(SelfConfigContainer):

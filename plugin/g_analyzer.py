@@ -33,12 +33,12 @@
 
 """ Manage the grammar analyzis """
 
+import gobject
+import json
 import os
+import Queue
 import subprocess
 import tempfile
-import json
-import gobject
-import Queue
 
 from g_config import GrammalecteConfig
 
