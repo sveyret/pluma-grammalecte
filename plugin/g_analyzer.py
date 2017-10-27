@@ -239,7 +239,7 @@ class _StateAnalyzing(_State):
 		self.__requester.cb_result(result)
 		return _StateWaiting(self._analyzer)
 
-class GrammalecteAnalyzer(object):
+class GrammalecteAnalyzer():
 	"""
 		Class managing grammar analyzis.
 
