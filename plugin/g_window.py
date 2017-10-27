@@ -63,11 +63,11 @@ class GrammalecteWindowHelper:
 		self.__window = window
 		self.__analyzer = GrammalecteAnalyzer()
 		self.__eventTabRemovedId = self.__window.connect(
-			"tab-removed", self.cb_tab_removed)
+			"tab-removed", self.on_tab_removed)
 		for view in self.__window.get_views():
 			self.__associate(view)
 		self.__eventTabAddedId = self.__window.connect(
-			"tab-added", self.cb_tab_added)
+			"tab-added", self.on_tab_added)
 		self.__insert_menu()
 
 	def deactivate(self):
@@ -90,19 +90,19 @@ class GrammalecteWindowHelper:
 			_("_Check Syntax..."),
 			"<shift>F7",
 			_("Check the current document for incorrect grammar and spelling"),
-			self.cb_menu_check),
+			self.on_menu_check),
 			('ConfigGrammalecte',
 			None,
 			_('Configure _Grammalecte...'),
 			None,
 			_("Configure the Grammalecte rules"),
-			self.cb_menu_config)])
+			self.on_menu_config)])
 		self.__actionGroup.add_toggle_actions([('AutoGrammalecte',
 			None,
 			_('_Autocheck Syntax'),
 			None,
 			_("Automatically grammar and spell-check the current document"),
-			self.cb_menu_auto)])
+			self.on_menu_auto)])
 		manager.insert_action_group(self.__actionGroup, -1)
 		self.__uiId = manager.add_ui_from_string(_ui_str)
 
@@ -125,12 +125,12 @@ class GrammalecteWindowHelper:
 		self.__actionGroup.set_sensitive(sensitive)
 		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
 
-	def cb_tab_added(self, action, tab):
+	def on_tab_added(self, action, tab):
 		""" Mange the tab added event """
 		self.__associate(tab.get_view())
 		self.update_ui()
 
-	def cb_tab_removed(self, action, tab):
+	def on_tab_removed(self, action, tab):
 		""" Manage the tab removed event """
 		self.__deassociate(tab.get_view())
 		self.update_ui()
@@ -149,10 +149,10 @@ class GrammalecteWindowHelper:
 			helper.deactivate()
 			view.set_data(GrammalecteViewHelper.DATA_TAG, None)
 
-	def cb_menu_check(self, action):
+	def on_menu_check(self, action):
 		pass
 
-	def cb_menu_auto(self, action):
+	def on_menu_auto(self, action):
 		""" Manage automatic toggle menu """
 		tab = self.__window.get_active_tab()
 		view = None if tab == None else tab.get_view()
@@ -161,7 +161,7 @@ class GrammalecteWindowHelper:
 		if helper != None and not helper.is_readonly():
 			helper.set_auto_analyze(action.get_active())
 
-	def cb_menu_config(self, action):
+	def on_menu_config(self, action):
 		pass
 
 	def get_analyzer(self):

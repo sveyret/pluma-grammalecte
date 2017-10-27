@@ -97,9 +97,9 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__curBuffer = None
 		view = self.__viewHelper.get_view()
 		self.__bufferData = _BufferData(
-			view.get_buffer(), self.cb_content_changed)
+			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
-			"notify::buffer", self.cb_buffer_changed)
+			"notify::buffer", self.on_buffer_changed)
 		self.__ask_request()
 
 	def deactivate(self):
@@ -110,15 +110,15 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__bufferData = None
 		self.__viewHelper = None
 
-	def cb_content_changed(self, *ignored):
+	def on_content_changed(self, *ignored):
 		""" Called when buffer content changed """
 		self.__ask_request()
 
-	def cb_buffer_changed(self, *ignored):
+	def on_buffer_changed(self, *ignored):
 		""" Called when the buffer was changed """
 		self.__bufferData.terminate()
 		self.__bufferData = _BufferData(
-			self.__viewHelper.get_view().get_buffer(), self.cb_content_changed)
+			self.__viewHelper.get_view().get_buffer(), self.on_content_changed)
 		self.__ask_request()
 
 	def __ask_request(self):
@@ -143,7 +143,7 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 				self.__curBuffer.get_start_iter(),
 				self.__curBuffer.get_end_iter())
 
-	def cb_result(self, result):
+	def on_result(self, result):
 		""" Set the result of the request """
 		if self.__bufferData != None and \
 			self.__curBuffer == self.__bufferData.vBuffer:

@@ -56,9 +56,9 @@ class GrammalecteViewHelper(SelfConfigContainer):
 			and not self.is_readonly():
 			self.__set_auto_analyze(True)
 		self.__eventDocSavedId = self.__document.connect(
-			"saved", self.cb_doc_saved)
+			"saved", self.on_doc_saved)
 		self.__eventDocLoadedId = self.__document.connect(
-			"loaded", self.cb_doc_loaded)
+			"loaded", self.on_doc_loaded)
 
 	def deactivate(self):
 		""" Disconnect the helper from the view """
@@ -91,14 +91,14 @@ class GrammalecteViewHelper(SelfConfigContainer):
 			self.__autocorrect.deactivate()
 			self.__autocorrect = None
 
-	def cb_doc_saved(self, document, error):
+	def on_doc_saved(self, document, error):
 		""" Manage the document saved event """
 		if error == None:
 			self.__filename = self.__document.get_uri()
 			self.__gFile = None if self.__filename is None else \
 				gio.File(self.__filename)
 
-	def cb_doc_loaded(self, document, error):
+	def on_doc_loaded(self, document, error):
 		""" Manage the document loaded event """
 		if error == None and (self.__document != document or \
 			self.__filename != document.get_uri()):
