@@ -249,6 +249,20 @@ class DictConfig:
 		except:
 			pass
 
+	def clear(self, level = 0):
+		"""
+			Clear all the configuration.
+
+			All the parameters are removed from this configuration. The removal
+			is made on the parent at given level. A level of 0 means to modify
+			this configuration, 1 is for this parent's configuration, 2 is for
+			this grand-parent's, etc.
+
+			:param level: (optional) the parent level.
+			:type level: int
+		"""
+		self.__config = {}
+
 	def close(self):
 		"""
 			Close this configuration and the parents.
