@@ -65,7 +65,7 @@ Dans ce dernier cas, il vous faudra modifier la configuration du greffon en édi
 Exemple :
 
     > cat ~/.config/pluma/grammalecte.conf
-    { "locale-dir": "/home/user/.local/share/locale", "grammalecte-cli": "/home/user/grammalecte/cli.py" }
+    { "locale-dir": "/home/user/.local/share/locale", "g-cli": "/home/user/grammalecte/cli.py" }
 
 # Utilisation
 
@@ -80,13 +80,17 @@ La configuration de Grammalecte est écrite dans des fichiers JSON. Ces fichiers
 
 Chaque fichier de configuration peut surcharger les valeurs présentes dans le fichier plus global. À contrario, une valeur non définie dans le fichier plus précis sera recherchée dans le fichier plus global.
 
-Les paramètres configurables sont :
-* `locale-dir` qui contient le chemin vers le répertoire des traductions ;
-* `auto-analyze-active` qui indique si la vérification automatique est activée ou non ;
-* `auto-analyze-timer`<sup>*</sup> qui contient la fréquence de rafraichissement pour l'analyse automatique.
-* `grammalecte-python-exe` qui contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
-* `grammalecte-cli` qui contient le chemin complet vers la ligne de commande de Grammalecte ;
-* `grammalecte-analyze-params`<sup>*</sup> qui contient les paramètres utilisés pour l'analyse par Grammalecte ;
+Les paramètres configurables sont les suivants :
+* `locale-dir` contient le chemin vers le répertoire des traductions ;
+* `analyze-options` contient les options d'analyse et leurs valeurs ;
+* `auto-analyze-active` indique si la vérification automatique est activée ou non ;
+* `auto-analyze-timer`<sup>*</sup> contient la fréquence de rafraichissement pour l'analyse automatique.
+* `g-python-exe` contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
+* `g-cli` contient le chemin complet vers la ligne de commande de Grammalecte ;
+* `g-cli-params`<sup>*</sup> contient des paramètres à utiliser avec la ligne de commande de Grammalecte ;
+* `g-analyze-params`<sup>*</sup> contient les paramètres utilisés pour l'analyse par Grammalecte ;
+* `g-options-params`<sup>*</sup> contient les paramètres utilisés pour la recherche des options de Grammalecte ;
+* `g-options-regex`<sup>*</sup> est l'expression rationnelle permettant l'extraction des résultats de Grammalecte pour la recherche des options.
 
 [*] Les options marquées d'un <sup>*</sup> sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
 

@@ -90,6 +90,10 @@ class _BufferData:
 
 class GrammalecteAutoCorrector(GrammalecteRequester):
 	""" The automatic corrector """
+
+	__SPELL_PARAM = GrammalecteConfig.ANALYZE_OPTIONS + "/" \
+		+ GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING
+
 	def __init__(self, viewHelper):
 		""" Initialize the corrector """
 		self.__viewHelper = viewHelper
@@ -154,10 +158,13 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 					start, end = self.__extract_limits(grammError)
 					self.__curBuffer.apply_tag(
 						self.__bufferData.grammarTag, start, end)
-				for spellError in parErrors[_GJsonEntry.SPELLING]:
-					start, end = self.__extract_limits(spellError)
-					self.__curBuffer.apply_tag(
-						self.__bufferData.spellingTag, start, end)
+				checkSpell = self.get_config().get_value(
+					GrammalecteAutoCorrector.__SPELL_PARAM)
+				if checkSpell != False:
+					for spellError in parErrors[_GJsonEntry.SPELLING]:
+						start, end = self.__extract_limits(spellError)
+						self.__curBuffer.apply_tag(
+							self.__bufferData.spellingTag, start, end)
 		self.__curBuffer = None
 
 	def __extract_limits(self, errorDesc):

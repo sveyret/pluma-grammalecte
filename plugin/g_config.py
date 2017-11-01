@@ -326,18 +326,39 @@ class GrammalecteConfig(DictConfig):
 	# ALL CONFIGURATION CONSTANTS ARE HERE
 	############
 	LOCALE_DIR = "locale-dir"
+	ANALYZE_OPTIONS = "analyze-options"
 	AUTO_ANALYZE_ACTIVE = "auto-analyze-active"
 	AUTO_ANALYZE_TIMER = "auto-analyze-timer"
-	GRAMMALECTE_PYTHON_EXE = "grammalecte-python-exe"
-	GRAMMALECTE_CLI = "grammalecte-cli"
-	GRAMMALECTE_ANALYZE_PARAMS = "grammalecte-analyze-params"
+	GRAMMALECTE_PYTHON_EXE = "g-python-exe"
+	GRAMMALECTE_CLI = "g-cli"
+	GRAMMALECTE_ANALYZE_PARAMS = "g-analyze-params"
+	GRAMMALECTE_OPTIONS_PARAMS = "g-options-params"
+	GRAMMALECTE_OPTIONS_REGEX = "g-options-regex"
+
+	__CLI_PARAMS = "g-cli-params"
+	__CLI_FILE = "file"
+	__CLI_OPTS_ON = "on"
+	__CLI_OPTS_OFF = "off"
+	GRAMMALECTE_CLI_FILE = __CLI_PARAMS + "/" + __CLI_FILE
+	GRAMMALECTE_CLI_OPTS_ON = __CLI_PARAMS + "/" + __CLI_OPTS_ON
+	GRAMMALECTE_CLI_OPTS_OFF = __CLI_PARAMS + "/" + __CLI_OPTS_OFF
+
+	GRAMMALECTE_OPTION_SPELLING = "_orth_"
 
 	__DEFAULT_CONFIG = {
+		ANALYZE_OPTIONS: {},
 		AUTO_ANALYZE_ACTIVE: False,
 		AUTO_ANALYZE_TIMER: 500,
 		GRAMMALECTE_PYTHON_EXE: "python3",
 		GRAMMALECTE_CLI: "/opt/grammalecte/cli.py",
-		GRAMMALECTE_ANALYZE_PARAMS: ["-j", "-cl", "-owe", "-ctx"]
+		__CLI_PARAMS: {
+			__CLI_FILE: "-f",
+			__CLI_OPTS_ON: "-on",
+			__CLI_OPTS_OFF: "-off"
+		},
+		GRAMMALECTE_ANALYZE_PARAMS: ["-j", "-cl", "-owe", "-ctx"],
+		GRAMMALECTE_OPTIONS_PARAMS: ["-lo"],
+		GRAMMALECTE_OPTIONS_REGEX: "^([a-zA-Z0-9]+):\s*(True|False)\s*(.*)$"
 	}
 
 	__PLUMA_CONFIG_FILE = "/pluma/grammalecte.conf"

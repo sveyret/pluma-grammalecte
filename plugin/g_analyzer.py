@@ -200,13 +200,37 @@ class _StateWaiting(_State):
 		for arg in config.get_value(
 			GrammalecteConfig.GRAMMALECTE_ANALYZE_PARAMS):
 			processArgs.append(arg)
-		processArgs.append("-f")
+		self.__build_option_params(config, processArgs)
+		processArgs.append(config.get_value(
+			GrammalecteConfig.GRAMMALECTE_CLI_FILE))
 		processArgs.append(self._analyzer._input.get_path())
 		process = subprocess.Popen(
 			processArgs,
 			stdout = self._analyzer._output.open_write(),
 			stderr = self._analyzer._error.open_write())
 		return _StateAnalyzing(self._analyzer, requester, process)
+
+	def __build_option_params(self, config, params):
+		""" Build the option on/off parameters """
+		optionOn, optionOff = [], []
+		options = config.get_value(GrammalecteConfig.ANALYZE_OPTIONS)
+		for optionName in options:
+			if optionName == GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING:
+				pass
+			elif options[optionName]:
+				optionOn.append(optionName)
+			else:
+				optionOff.append(optionName)
+		if len(optionOn) > 0:
+			params.append(config.get_value(
+				GrammalecteConfig.GRAMMALECTE_CLI_OPTS_ON))
+		for option in optionOn:
+			params.append(option)
+		if len(optionOff) > 0:
+			params.append(config.get_value(
+				GrammalecteConfig.GRAMMALECTE_CLI_OPTS_OFF))
+		for option in optionOff:
+			params.append(option)
 
 class _StateAnalyzing(_State):
 	"""
