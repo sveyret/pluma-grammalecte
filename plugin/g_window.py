@@ -36,10 +36,10 @@ import gtk
 from g_config import GrammalecteConfig
 
 from g_analyzer import GrammalecteAnalyzer
+from g_config_dlg import GrammalecteConfigDlg
 from g_view import GrammalecteViewHelper
 
 #<menuitem name="CheckGrammalecte" action="CheckGrammalecte"/>
-#<menuitem name="ConfigGrammalecte" action="ConfigGrammalecte"/>
 _ui_str = """
 <ui>
 	<menubar name="MenuBar">
@@ -47,6 +47,7 @@ _ui_str = """
 			<placeholder name="ToolsOps_1">
 				<separator />
 				<menuitem name="AutoGrammalecte" action="AutoGrammalecte"/>
+				<menuitem name="ConfigGrammalecte" action="ConfigGrammalecte"/>
 				<separator />
 			</placeholder>
 		</menu>
@@ -162,7 +163,8 @@ class GrammalecteWindowHelper:
 			helper.set_auto_analyze(action.get_active())
 
 	def on_menu_config(self, action):
-		pass
+		dialog = GrammalecteConfigDlg()
+		dialog.run()
 
 	def get_analyzer(self):
 		return self.__analyzer
