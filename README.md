@@ -98,7 +98,7 @@ Les paramètres configurables sont les suivants :
 
 ## Version 0.3
 
-- [ ] Ajouter l'IHM pour modifier la configuration de Grammalecte.
+- [x] Ajouter l'IHM pour modifier la configuration de Grammalecte.
 
 ### Version 0.4
 

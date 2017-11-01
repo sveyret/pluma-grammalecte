@@ -42,7 +42,7 @@ PLUGIN_INSTALL ?= /usr/lib
 APP_NAME=grammalecte
 APP_TYPE=pluma-plugin
 APP_PACKNAME=pluma-grammalecte
-APP_VERSION=0.1
+APP_VERSION=0.3
 APP_AUTHOR=Stéphane Veyret
 
 # Sources and targets
