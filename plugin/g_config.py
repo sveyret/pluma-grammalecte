@@ -267,7 +267,8 @@ class DictConfig:
 		"""
 			Close this configuration and the parents.
 
-			If there are modifications on this file, it will be saved to disk.
+			If there are modifications and the configuration is associated to a
+			valid file, it will be saved to disk.
 
 			.. note:: A closed configuration can still be used, but should be
 			closed again after.
