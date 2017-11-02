@@ -245,7 +245,10 @@ class DictConfig:
 					entry = entry[oldName]
 				oldName = name
 			if oldName != None:
-				entry[oldName] = newValue
+				if newValue == None:
+					del entry[oldName]
+				else:
+					entry[oldName] = newValue
 		except:
 			pass
 
