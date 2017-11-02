@@ -168,7 +168,32 @@ class DictConfig:
 		result = self.__find(xPath)
 		if result == None and self.__parent != None:
 			result = self.__parent.get_value(xPath)
+		elif type(result) is dict and self.__parent != None:
+			result = {}
+			for key in self.__get_keys(xPath):
+				result[key] = self.get_value(xPath + "/" + key)
 		return result
+
+	def __get_keys(self, xPath):
+		"""
+			Get all the keys in the dict at xPath location.
+
+			If the object at given location is not a dict, the key set will be
+			empty.
+
+			:param xPath: the xPath-like query to reach the dict.
+			:type xPath: str
+			:return: a set of keys, or an empty set if no key.
+			:rtype: set
+		"""
+		keys = set()
+		if self.__parent != None:
+			keys.update(self.__parent.__get_keys(xPath))
+		value = self.__find(xPath)
+		if type(value) is dict:
+			for key in value:
+				keys.add(key)
+		return keys
 
 	def set_value(self, xPath, newValue, level = 0):
 		"""
