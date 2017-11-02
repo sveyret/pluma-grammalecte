@@ -104,10 +104,18 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
 			"notify::buffer", self.on_buffer_changed)
+		analyzer = self.__viewHelper.get_analyzer()
+		self.__eventAnalStartId = analyzer.connect(
+			"analyze-started", self.on_analyze_started)
+		self.__eventAnalFinishId = analyzer.connect(
+			"analyze-finished", self.on_analyze_finished)
 		self.__ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
+		analyzer = self.__viewHelper.get_analyzer()
+		analyzer.disconnect(self.__eventAnalFinishId)
+		analyzer.disconnect(self.__eventAnalStartId)
 		view = self.__viewHelper.get_view()
 		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
@@ -138,33 +146,34 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def get_text(self):
 		""" Get the text of the requester """
-		self.__requested = False
-		if self.__bufferData == None:
-			return ""
-		else:
-			self.__curBuffer = self.__bufferData.vBuffer
-			return self.__curBuffer.get_slice(
-				self.__curBuffer.get_start_iter(),
-				self.__curBuffer.get_end_iter())
+		self.__curBuffer = self.__bufferData.vBuffer
+		return self.__curBuffer.get_slice(
+			self.__curBuffer.get_start_iter(), self.__curBuffer.get_end_iter())
 
-	def on_result(self, result):
+	def on_analyze_started(self, analyzer, requester):
+		""" Indicate that analyze has started """
+		if requester != self:
+			return
+		self.__requested = False
+
+	def on_analyze_finished(self, analyzer, requester, result):
 		""" Set the result of the request """
-		if self.__bufferData != None and \
-			self.__curBuffer == self.__bufferData.vBuffer:
-			self.__bufferData.clear_tags(
-				[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
-			for parErrors in result:
-				for grammError in parErrors[_GJsonEntry.GRAMMAR]:
-					start, end = self.__extract_limits(grammError)
+		if requester != self or self.__curBuffer != self.__bufferData.vBuffer:
+			return
+		self.__bufferData.clear_tags(
+			[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
+		for parErrors in result:
+			for grammError in parErrors[_GJsonEntry.GRAMMAR]:
+				start, end = self.__extract_limits(grammError)
+				self.__curBuffer.apply_tag(
+					self.__bufferData.grammarTag, start, end)
+			checkSpell = self.get_config().get_value(
+				GrammalecteAutoCorrector.__SPELL_PARAM)
+			if checkSpell != False:
+				for spellError in parErrors[_GJsonEntry.SPELLING]:
+					start, end = self.__extract_limits(spellError)
 					self.__curBuffer.apply_tag(
-						self.__bufferData.grammarTag, start, end)
-				checkSpell = self.get_config().get_value(
-					GrammalecteAutoCorrector.__SPELL_PARAM)
-				if checkSpell != False:
-					for spellError in parErrors[_GJsonEntry.SPELLING]:
-						start, end = self.__extract_limits(spellError)
-						self.__curBuffer.apply_tag(
-							self.__bufferData.spellingTag, start, end)
+						self.__bufferData.spellingTag, start, end)
 		self.__curBuffer = None
 
 	def __extract_limits(self, errorDesc):

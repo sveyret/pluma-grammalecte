@@ -41,7 +41,7 @@ from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
 
 class MockRequester(GrammalecteRequester):
 	""" Mock for the requester """
-	def __init__(self, result_action):
+	def __init__(self, analyzer, result_action):
 		self.config = GrammalecteConfig()
 		self.example = "Quoi ? Racontes ! Racontes-moi ! Bon sangg, parles !" \
 			" Oui. Il y a des menteur partout. Je suit sidéré par la" \
@@ -51,6 +51,7 @@ class MockRequester(GrammalecteRequester):
 		self.result_action = result_action
 		self.grammar_errors = 0
 		self.spelling_errors = 0
+		analyzer.connect("analyze-finished", self.on_result)
 
 	def get_text(self):
 		""" Get the text of the requester """
@@ -60,8 +61,10 @@ class MockRequester(GrammalecteRequester):
 		""" Get the configuration for the requester """
 		return self.config
 
-	def on_result(self, result):
+	def on_result(self, analyzer, requester, result):
 		""" Set the result of the request """
+		if requester != self:
+			return
 		for err_in_paragraph in result:
 			for grammar_error in err_in_paragraph["lGrammarErrors"]:
 				print grammar_error["sBefore"], "[", \
@@ -78,7 +81,8 @@ class TestGrammalecteAnalyzer(unittest.TestCase):
 	def setUp(self):
 		self.mainloop = gobject.MainLoop()
 		self.analyzer = GrammalecteAnalyzer()
-		self.requester = MockRequester(lambda : self.mainloop.quit())
+		self.requester = MockRequester(
+			self.analyzer, lambda : self.mainloop.quit())
 
 	def tearDown(self):
 		self.analyzer.terminate()

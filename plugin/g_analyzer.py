@@ -67,15 +67,6 @@ class GrammalecteRequester:
 		"""
 		pass
 
-	def on_result(self, result):
-		"""
-			Give the result of the request.
-
-			:param result: the result of the request.
-			:type result: dict
-		"""
-		pass
-
 class _TempFile():
 	""" A temporary file """
 
@@ -193,6 +184,7 @@ class _StateWaiting(_State):
 		if config == None:
 			return self
 		self._analyzer._input.write(requester.get_text())
+		self._analyzer.emit("analyze-started", requester)
 		processArgs = []
 		processArgs.append(config.get_value(
 			GrammalecteConfig.GRAMMALECTE_PYTHON_EXE))
@@ -260,10 +252,10 @@ class _StateAnalyzing(_State):
 				" properly:\n{}").format(self._analyzer._error.read())
 		self._analyzer._output.close()
 		self._analyzer._error.close()
-		self.__requester.on_result(result)
+		self._analyzer.emit("analyze-finished", self.__requester, result)
 		return _StateWaiting(self._analyzer)
 
-class GrammalecteAnalyzer():
+class GrammalecteAnalyzer(gobject.GObject):
 	"""
 		Class managing grammar analyzis.
 
@@ -273,8 +265,21 @@ class GrammalecteAnalyzer():
 		This class is managed as a state machine.
 	"""
 
+	__gsignals__ = {
+		"analyze-started": (
+			gobject.SIGNAL_RUN_LAST,
+			gobject.TYPE_NONE,
+			(gobject.TYPE_PYOBJECT,)),
+		"analyze-finished": (
+			gobject.SIGNAL_RUN_LAST,
+			gobject.TYPE_NONE,
+			(gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))
+	}
+
 	def __init__(self):
 		""" Initialize the analyzer """
+		gobject.GObject.__init__(self)
+
 		# Define instance data
 		self._queue = Queue.Queue()
 		self._input = _TempFile()
