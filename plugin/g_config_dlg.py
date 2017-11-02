@@ -95,6 +95,7 @@ class GrammalecteConfigDlg:
 	def __create_scope_box(self):
 		""" Create the scope box """
 		if self.viewHelper == None:
+			self.globalOption = None
 			return None
 		else:
 			filename = self.activeWindow.get_active_document() \
@@ -212,8 +213,10 @@ class GrammalecteConfigDlg:
 				self.__clear_config(config)
 		self.dialog.destroy()
 		if response == gtk.RESPONSE_ACCEPT:
-			pass
-			#TODO Enregistrer les résultats
+			forGlobal = True if self.globalOption == None else \
+				self.globalOption.get_active()
+			self.__update_config(forGlobal)
+			self.__save_config(config)
 		return response == gtk.RESPONSE_ACCEPT
 
 	def __clear_config(self, config):
@@ -249,6 +252,23 @@ class GrammalecteConfigDlg:
 			if not forGlobal or changed:
 				option[GrammalecteConfigDlg.__OPTION_FVAL] = value
 
+	def __save_config(self, config):
+		""" Save the configuration """
+		gconfig = {}
+		fconfig = {}
+		for option in self.options:
+			key = option[GrammalecteConfigDlg.__OPTION_KEY]
+			gvalue = option[GrammalecteConfigDlg.__OPTION_GVAL]
+			fvalue = option[GrammalecteConfigDlg.__OPTION_FVAL]
+			gconfig[key] = gvalue
+			if gvalue != fvalue:
+				fconfig[key] = fvalue
+		if len(gconfig) == 0:
+			gconfig = None
+		if len(fconfig) == 0:
+			fconfig = None
+		config.set_value(GrammalecteConfig.ANALYZE_OPTIONS, gconfig, 1)
+		config.set_value(GrammalecteConfig.ANALYZE_OPTIONS, fconfig)
 
 	def __flush_events(self):
 		""" Clear pending events """

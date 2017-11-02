@@ -163,8 +163,10 @@ class GrammalecteWindowHelper:
 			helper.set_auto_analyze(action.get_active())
 
 	def on_menu_config(self, action):
+		""" Change configuration """
 		dialog = GrammalecteConfigDlg()
-		dialog.run()
+		if dialog.run():
+			pass
 
 	def get_analyzer(self):
 		return self.__analyzer
