@@ -52,8 +52,7 @@ class GrammalecteViewHelper(SelfConfigContainer):
 			gio.File(self.__filename)
 		self.__config = GrammalecteConfig(self)
 		self.__autocorrect = None
-		if self.__config.get_value(GrammalecteConfig.AUTO_ANALYZE_ACTIVE) \
-			and not self.is_readonly():
+		if self.is_auto_checked():
 			self.__set_auto_analyze(True)
 		self.__eventDocSavedId = self.__document.connect(
 			"saved", self.on_doc_saved)
@@ -106,7 +105,8 @@ class GrammalecteViewHelper(SelfConfigContainer):
 	def on_doc_loaded(self, document, error):
 		""" Manage the document loaded event """
 		if error == None and (self.__document != document or \
-			self.__filename != document.get_uri()):
+			self.__filename != document.get_uri() or \
+			(self.__autocorrect != None) != self.is_auto_checked()):
 			view = self.__view
 			windowHelper = self.__windowHelper
 			self.deactivate()
@@ -130,6 +130,11 @@ class GrammalecteViewHelper(SelfConfigContainer):
 		if self.__gFile != None:
 			self.__gFile.set_attribute_string(
 				GrammalecteViewHelper.__CONFIG_METADATA, config)
+
+	def is_auto_checked(self):
+		""" Indicate if automatic check is on """
+		return self.__config.get_value(GrammalecteConfig.AUTO_ANALYZE_ACTIVE) \
+			and not self.is_readonly()
 
 	def is_readonly(self):
 		""" Indicate if the associated document is read-only """

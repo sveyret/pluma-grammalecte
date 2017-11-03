@@ -147,8 +147,7 @@ class GrammalecteWindowHelper:
 		""" UI update requested """
 		helper = self.__get_active_helper()
 		sensitive = helper != None and not helper.is_readonly()
-		autoActive = helper != None and helper.get_config().get_value(
-			GrammalecteConfig.AUTO_ANALYZE_ACTIVE)
+		autoActive = helper != None and helper.is_auto_checked()
 		self.__actionGroup.set_sensitive(sensitive)
 		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
 
