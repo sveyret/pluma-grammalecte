@@ -71,6 +71,8 @@ Exemple :
 
 Pour le moment, le greffon se contente de souligner en temps réel (ou presque !) les erreurs d'orthographe ou grammaire dans _pluma_ lorsque la vérification automatique est activée. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
 
+Pour sélectionner les options utilisées avec Grammalecte, vous pouvez aller dans le menu « Outils » et choisir l'option « Configurer Grammalecte... ». Une fenêtre présente alors les options disponibles que vous pouvez cocher ou non. Notez que vous pouvez sélectionner des options différentes par défaut (en choisissant « Global ») et pour le fichier (en choisissant le nom du fichier en cours). Les options globales seront enregistrées dans votre configuration utilisateur, tandis que les options spécifiques au fichier se retrouveront dans ses métadonnées. Il est possible de supprimer toute la configuration spécifique à un fichier depuis cette boite de dialogue à l'aide du bouton « Effacer ».
+
 ## Configuration
 
 La configuration de Grammalecte est écrite dans des fichiers JSON. Ces fichiers se trouvent :
@@ -92,7 +94,7 @@ Les paramètres configurables sont les suivants :
 * `g-options-params`<sup>*</sup> contient les paramètres utilisés pour la recherche des options de Grammalecte ;
 * `g-options-regex`<sup>*</sup> est l'expression rationnelle permettant l'extraction des résultats de Grammalecte pour la recherche des options.
 
-[*] Les options marquées d'un <sup>*</sup> sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
+Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
 
 # À faire
 
