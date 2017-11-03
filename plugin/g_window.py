@@ -58,11 +58,19 @@ _ui_str = """
 class GrammalecteWindowHelper:
 	""" The Window helper """
 	DATA_TAG = "GrammalecteWindowHelper"
+	__STATUS_BAR_TAG = "Grammalecte"
 
 	def __init__(self, window):
 		""" Initialize the helper """
 		self.__window = window
+		self.__statusBar = self.__window.get_statusbar()
+		self.__sbContext = self.__statusBar.get_context_id(
+			GrammalecteWindowHelper.__STATUS_BAR_TAG)
 		self.__analyzer = GrammalecteAnalyzer()
+		self.__eventAnalyzeStartId = self.__analyzer.connect(
+			"analyze-started", self.on_analyze_started)
+		self.__eventAnalyzeFinishId = self.__analyzer.connect(
+			"analyze-finished", self.on_analyze_finished)
 		self.__eventTabRemovedId = self.__window.connect(
 			"tab-removed", self.on_tab_removed)
 		for view in self.__window.get_views():
@@ -78,8 +86,12 @@ class GrammalecteWindowHelper:
 		for view in self.__window.get_views():
 			self.__deassociate(view)
 		self.__window.disconnect(self.__eventTabRemovedId)
+		self.__analyzer.disconnect(self.__eventAnalyzeFinishId)
+		self.__analyzer.disconnect(self.__eventAnalyzeStartId)
 		self.__analyzer.terminate()
 		self.__analyzer = None
+		self.__sbContext = None
+		self.__statusBar = None
 		self.__window = None
 
 	def __insert_menu(self):
@@ -113,6 +125,13 @@ class GrammalecteWindowHelper:
 		manager.remove_ui(self.__uiId)
 		manager.remove_action_group(self.__actionGroup)
 		manager.ensure_update()
+
+	def on_analyze_started(self, *ignored):
+		self.__statusBar.push(
+			self.__sbContext, _("Grammar checking in progress..."))
+
+	def on_analyze_finished(self, *ignored):
+		self.__statusBar.pop(self.__sbContext)
 
 	def on_tab_added(self, action, tab):
 		""" Mange the tab added event """
