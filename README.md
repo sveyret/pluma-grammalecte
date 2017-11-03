@@ -69,11 +69,15 @@ Exemple :
 
 # Utilisation
 
-Pour le moment, le greffon se contente de souligner en temps réel (ou presque !) les erreurs d'orthographe ou grammaire dans _pluma_ lorsque la vérification automatique est activée. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
+## Vérification automatique
 
-Pour sélectionner les options utilisées avec Grammalecte, vous pouvez aller dans le menu « Outils » et choisir l'option « Configurer Grammalecte... ». Une fenêtre présente alors les options disponibles que vous pouvez cocher ou non. Notez que vous pouvez sélectionner des options différentes par défaut (en choisissant « Global ») et pour le fichier (en choisissant le nom du fichier en cours). Les options globales seront enregistrées dans votre configuration utilisateur, tandis que les options spécifiques au fichier se retrouveront dans ses métadonnées. Il est possible de supprimer toute la configuration spécifique à un fichier depuis cette boite de dialogue à l'aide du bouton « Effacer ».
+Lorsque la vérification automatique est activée, le greffon souligne en temps réel les erreurs d'orthographe ou grammaire dans _pluma_. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
 
-## Configuration
+## Configurer
+
+Pour sélectionner les options utilisées avec Grammalecte, vous pouvez aller dans le menu « Outils » et choisir l'option « Configurer Grammalecte... ». Une fenêtre présente alors les options disponibles que vous pouvez cocher ou non. Notez que vous pouvez sélectionner des options différentes par défaut (en choisissant « Global ») et pour le fichier en cours (en choisissant son nom). Les options globales seront enregistrées dans votre configuration utilisateur, tandis que les options spécifiques au fichier se retrouveront dans ses métadonnées. Il est possible de supprimer toute la configuration d'un fichier depuis cette boite de dialogue à l'aide du bouton « Effacer ».
+
+# Configuration
 
 La configuration de Grammalecte est écrite dans des fichiers JSON. Ces fichiers se trouvent :
 * pour la configuration globale au système, dans `/etc/pluma/grammalecte.conf` ;
@@ -102,16 +106,16 @@ Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avert
 
 - [x] Ajouter l'IHM pour modifier la configuration de Grammalecte.
 
-### Version 0.4
+## Version 0.4
 
 - [ ] Afficher une info-bulle sur les erreurs.
 - [ ] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
 
-### Version 1.0
+## Version 1.0
 
 - [ ] Ajouter une correction interactive.
 
-### Autre
+## Autre
 
 - [ ] Se débarrasser de l'avertissement : g_autocorrect.py:174: GtkWarning: IA__gtk_text_iter_set_line_offset: assertion 'char_on_line <= chars_in_line' failed
   iterator.set_line_offset(errorDesc[offset])
