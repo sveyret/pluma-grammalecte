@@ -49,63 +49,63 @@ class GrammalecteConfigDlg:
 
 	def __init__(self, window, viewHelper):
 		""" Prepare the dialog box """
-		self.activeWindow = window
-		self.viewHelper = viewHelper
+		self.__activeWindow = window
+		self.__viewHelper = viewHelper
 
-		self.dialog = gtk.Dialog(_("Configuration"),
-			self.activeWindow,
+		self.__dialog = gtk.Dialog(_("Configuration"),
+			self.__activeWindow,
 			gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 			(gtk.STOCK_CLEAR, GrammalecteConfigDlg.__RESPONSE_CLEAR,
 			gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
 			gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
-		self.dialog.connect('delete-event', self.on_delete_event)
-		self.dialog.set_default_size(450, 400)
+		self.__dialog.connect('delete-event', self.on_delete_event)
+		self.__dialog.set_default_size(450, 400)
 
-		for button in self.dialog.get_action_area().get_children():
+		for button in self.__dialog.get_action_area().get_children():
 			if button.get_label() == "gtk-clear":
-				self.button_clear = button
-		if self.button_clear == None:
+				self.__button_clear = button
+		if self.__button_clear == None:
 			raise Exception(_("Internal error"))
 
 		box = self.__create_scope_box()
 		if box != None:
-			self.dialog.get_content_area().pack_start(box, False)
+			self.__dialog.get_content_area().pack_start(box, False)
 		self.__extract_options()
 
 		box = gtk.VBox()
-		self.dialog.get_content_area().add(
+		self.__dialog.get_content_area().add(
 			self.__surround_with_scrollbars(box))
-		for option in self.options:
+		for option in self.__options:
 			box.add(option[GrammalecteConfigDlg.__OPTION_BUTTON])
 		self.__display_config(True)
 
-		self.dialog.show_all()
-		self.button_clear.hide()
+		self.__dialog.show_all()
+		self.__button_clear.hide()
 
 	def __create_scope_box(self):
 		""" Create the scope box """
-		if self.viewHelper == None:
-			self.globalOption = None
+		if self.__viewHelper == None:
+			self.__globalToggle = None
 			return None
 		else:
-			filename = self.activeWindow.get_active_document() \
+			filename = self.__activeWindow.get_active_document() \
 				.get_short_name_for_display()
-			self.globalOption = gtk.RadioButton(label = _("Global"))
-			fileOption = gtk.RadioButton(self.globalOption, filename)
-			self.globalOption.set_active(True)
+			self.__globalToggle = gtk.RadioButton(label = _("Global"))
+			fileOption = gtk.RadioButton(self.__globalToggle, filename)
+			self.__globalToggle.set_active(True)
 			box = gtk.HBox(True)
-			box.add(self.globalOption)
+			box.add(self.__globalToggle)
 			box.add(fileOption)
-			self.globalOption.connect("toggled", self.on_toggle_scope)
+			self.__globalToggle.connect("toggled", self.on_toggle_scope)
 			return box
 
 	def __extract_options(self):
 		""" Grab the options from Grammalecte """
-		config = GrammalecteConfig() if self.viewHelper == None else \
-			self.viewHelper.get_config()
+		config = GrammalecteConfig() if self.__viewHelper == None else \
+			self.__viewHelper.get_config()
 
 		waitDlg = gtk.MessageDialog(
-			self.activeWindow,
+			self.__activeWindow,
 			gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 			message_format = _("Preparing Grammalecte options..."))
 		waitDlg.show()
@@ -141,8 +141,8 @@ class GrammalecteConfigDlg:
 
 	def __set_options(self, rawOptions, regex):
 		""" Set the options from the raw result """
-		self.optionsByKey = {}
-		self.options = []
+		self.__optionsByKey = {}
+		self.__options = []
 		pattern = re.compile(regex)
 		self.__set_option(
 			GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING,
@@ -160,15 +160,16 @@ class GrammalecteConfigDlg:
 			GrammalecteConfigDlg.__OPTION_KEY: optionName,
 			GrammalecteConfigDlg.__OPTION_BUTTON: gtk.CheckButton(optionDesc),
 			GrammalecteConfigDlg.__OPTION_GVAL: optionValue == "True" }
-		self.optionsByKey[optionName] = option
-		self.options.append(option)
+		self.__optionsByKey[optionName] = option
+		self.__options.append(option)
 
 	def __set_options_value(self, config, optionVal):
 		""" Set the options value depending on configuration """
 		options = config.get_value(GrammalecteConfig.ANALYZE_OPTIONS)
 		for optionName in options:
-			if self.optionsByKey.has_key(optionName):
-				self.optionsByKey[optionName][optionVal] = options[optionName]
+			if self.__optionsByKey.has_key(optionName):
+				self.__optionsByKey[optionName][optionVal] = \
+					options[optionName]
 
 	def __surround_with_scrollbars(self, box):
 		""" Surround the given box with scrollbars """
@@ -179,32 +180,32 @@ class GrammalecteConfigDlg:
 
 	def on_delete_event(self, dialog, event):
 		""" Dialog box was manually closed """
-		self.dialog.destroy()
+		self.__dialog.destroy()
 
 	def on_toggle_scope(self, widget):
 		""" Manage the toggle scope event """
-		forGlobal = self.globalOption.get_active()
+		forGlobal = self.__globalToggle.get_active()
 		self.__update_config(not forGlobal)
 		self.__display_config(forGlobal)
 		if forGlobal:
-			self.button_clear.hide()
+			self.__button_clear.hide()
 		else:
-			self.button_clear.show()
+			self.__button_clear.show()
 
 	def run(self):
 		""" Execute the dialog """
-		config = GrammalecteConfig() if self.viewHelper == None else \
-			self.viewHelper.get_config()
+		config = GrammalecteConfig() if self.__viewHelper == None else \
+			self.__viewHelper.get_config()
 
 		response = GrammalecteConfigDlg.__RESPONSE_CLEAR
 		while response == GrammalecteConfigDlg.__RESPONSE_CLEAR:
-			response = self.dialog.run()
+			response = self.__dialog.run()
 			if response == GrammalecteConfigDlg.__RESPONSE_CLEAR:
 				self.__clear_config(config)
-		self.dialog.destroy()
+		self.__dialog.destroy()
 		if response == gtk.RESPONSE_ACCEPT:
-			forGlobal = True if self.globalOption == None else \
-				self.globalOption.get_active()
+			forGlobal = True if self.__globalToggle == None else \
+				self.__globalToggle.get_active()
 			self.__update_config(forGlobal)
 			self.__save_config(config)
 		return response == gtk.RESPONSE_ACCEPT
@@ -219,7 +220,7 @@ class GrammalecteConfigDlg:
 
 	def __copy_global_in_file(self):
 		""" Copy the global values in file values """
-		for option in self.options:
+		for option in self.__options:
 			option[GrammalecteConfigDlg.__OPTION_FVAL] = \
 				option[GrammalecteConfigDlg.__OPTION_GVAL]
 
@@ -227,13 +228,13 @@ class GrammalecteConfigDlg:
 		""" Update display from configuration """
 		valueKey = GrammalecteConfigDlg.__OPTION_GVAL if forGlobal else \
 			GrammalecteConfigDlg.__OPTION_FVAL
-		for option in self.options:
+		for option in self.__options:
 			option[GrammalecteConfigDlg.__OPTION_BUTTON].set_active(
 				option[valueKey])
 		
 	def __update_config(self, forGlobal):
 		""" Update the dialog configuration from user input """
-		for option in self.options:
+		for option in self.__options:
 			value = option[GrammalecteConfigDlg.__OPTION_BUTTON].get_active()
 			changed = False
 			if forGlobal:
@@ -246,7 +247,7 @@ class GrammalecteConfigDlg:
 		""" Save the configuration """
 		gconfig = {}
 		fconfig = {}
-		for option in self.options:
+		for option in self.__options:
 			key = option[GrammalecteConfigDlg.__OPTION_KEY]
 			gvalue = option[GrammalecteConfigDlg.__OPTION_GVAL]
 			fvalue = option[GrammalecteConfigDlg.__OPTION_FVAL]
