@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: pluma-grammalecte 0.1\n"
+"Project-Id-Version: pluma-grammalecte 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-26 15:16+0200\n"
+"POT-Creation-Date: 2017-11-03 09:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,44 +17,68 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plugin/g_analyzer.py:235
+#: plugin/g_analyzer.py:251 plugin/g_config_dlg.py:138
 msgid ""
 "Error: Grammalecte process did not terminate properly:\n"
 "{}"
 msgstr ""
 
-#: plugin/g_analyzer.py:275
+#: plugin/g_analyzer.py:304
 msgid "Exception: {}"
 msgstr ""
 
-#: plugin/g_config.py:279
+#: plugin/g_config_dlg.py:55
+msgid "Configuration"
+msgstr ""
+
+#: plugin/g_config_dlg.py:68
+msgid "Internal error"
+msgstr ""
+
+#: plugin/g_config_dlg.py:93
+msgid "Global"
+msgstr ""
+
+#: plugin/g_config_dlg.py:110
+msgid "Preparing Grammalecte options..."
+msgstr ""
+
+#: plugin/g_config_dlg.py:149
+msgid "Check Spelling"
+msgstr ""
+
+#: plugin/g_config.py:322
 msgid "Error: configuration file “{}” could not be saved"
 msgstr ""
 
-#: plugin/g_config.py:288
+#: plugin/g_config.py:331
 msgid "Error: configuration could not be saved"
 msgstr ""
 
-#: plugin/g_window.py:87
+#: plugin/g_window.py:103
 msgid "_Check Syntax..."
 msgstr ""
 
-#: plugin/g_window.py:89
+#: plugin/g_window.py:105
 msgid "Check the current document for incorrect grammar and spelling"
 msgstr ""
 
-#: plugin/g_window.py:93
+#: plugin/g_window.py:109
 msgid "Configure _Grammalecte..."
 msgstr ""
 
-#: plugin/g_window.py:95
+#: plugin/g_window.py:111
 msgid "Configure the Grammalecte rules"
 msgstr ""
 
-#: plugin/g_window.py:99
+#: plugin/g_window.py:115
 msgid "_Autocheck Syntax"
 msgstr ""
 
-#: plugin/g_window.py:101
+#: plugin/g_window.py:117
 msgid "Automatically grammar and spell-check the current document"
+msgstr ""
+
+#: plugin/g_window.py:131
+msgid "Grammar checking in progress..."
 msgstr ""
