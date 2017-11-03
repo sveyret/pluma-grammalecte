@@ -187,9 +187,7 @@ class GrammalecteWindowHelper:
 
 	def __get_active_helper(self):
 		""" Get the helper of active view """
-		tab = self.__window.get_active_tab()
-		view = None if tab == None else tab.get_view()
-		return self.__get_associated_helper(view)
+		return self.__get_associated_helper(self.__window.get_active_view())
 
 	def __get_associated_helper(self, view):
 		""" Get the helper associated to the view """
