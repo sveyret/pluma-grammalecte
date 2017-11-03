@@ -66,6 +66,8 @@ class GrammalecteConfigDlg:
 				self.__button_clear = button
 		if self.__button_clear == None:
 			raise Exception(_("Internal error"))
+		self.__button_clear.set_tooltip_text(
+			_("Clear all file specific settings"))
 
 		box = self.__create_scope_box()
 		if box != None:

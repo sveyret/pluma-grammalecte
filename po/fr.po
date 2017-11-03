@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-03 09:09+0100\n"
+"POT-Creation-Date: 2017-11-03 09:26+0100\n"
 "PO-Revision-Date: 2017-10-21 21:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: plugin/g_analyzer.py:251 plugin/g_config_dlg.py:138
+#: plugin/g_analyzer.py:251 plugin/g_config_dlg.py:140
 msgid ""
 "Error: Grammalecte process did not terminate properly:\n"
 "{}"
@@ -37,15 +37,19 @@ msgstr "Configuration"
 msgid "Internal error"
 msgstr "Erreur interne"
 
-#: plugin/g_config_dlg.py:93
+#: plugin/g_config_dlg.py:70
+msgid "Clear all file specific settings"
+msgstr "Effacer la configuration spécifique au fichier"
+
+#: plugin/g_config_dlg.py:95
 msgid "Global"
 msgstr "Global"
 
-#: plugin/g_config_dlg.py:110
+#: plugin/g_config_dlg.py:112
 msgid "Preparing Grammalecte options..."
 msgstr "Préparation des options de Grammalecte..."
 
-#: plugin/g_config_dlg.py:149
+#: plugin/g_config_dlg.py:151
 msgid "Check Spelling"
 msgstr "Vérifier l'orthographe"
 
