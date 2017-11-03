@@ -102,10 +102,6 @@ Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avert
 
 # À faire
 
-## Version 0.3
-
-- [x] Ajouter l'IHM pour modifier la configuration de Grammalecte.
-
 ## Version 0.4
 
 - [ ] Afficher une info-bulle sur les erreurs.
@@ -117,7 +113,5 @@ Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avert
 
 ## Autre
 
-- [ ] Se débarrasser de l'avertissement : g_autocorrect.py:174: GtkWarning: IA__gtk_text_iter_set_line_offset: assertion 'char_on_line <= chars_in_line' failed
-  iterator.set_line_offset(errorDesc[offset])
 - [ ] Optimiser la correction (n'envoyer qu'un seul paragraphe lorsque possible).
 
