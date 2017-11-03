@@ -47,9 +47,10 @@ class GrammalecteConfigDlg:
 	__OPTION_GVAL = "global-value"
 	__OPTION_FVAL = "file-value"
 
-	def __init__(self):
+	def __init__(self, window, viewHelper):
 		""" Prepare the dialog box """
-		self.__init_active_elements()
+		self.activeWindow = window
+		self.viewHelper = viewHelper
 
 		self.dialog = gtk.Dialog(_("Configuration"),
 			self.activeWindow,
@@ -80,17 +81,6 @@ class GrammalecteConfigDlg:
 
 		self.dialog.show_all()
 		self.button_clear.hide()
-
-	def __init_active_elements(self):
-		""" Get the active Window and view helper """
-		application = pluma.app_get_default()
-		self.activeWindow = None if application == None else \
-			application.get_active_window()
-		tab = None if self.activeWindow == None else \
-			self.activeWindow.get_active_tab()
-		view = None if tab == None else tab.get_view()
-		self.viewHelper = None if view == None else view.get_data(
-			GrammalecteViewHelper.DATA_TAG)
 
 	def __create_scope_box(self):
 		""" Create the scope box """

@@ -114,18 +114,6 @@ class GrammalecteWindowHelper:
 		manager.remove_action_group(self.__actionGroup)
 		manager.ensure_update()
 
-	def update_ui(self):
-		""" UI update requested """
-		tab = self.__window.get_active_tab()
-		view = None if tab == None else tab.get_view()
-		helper = None if view == None else view.get_data(
-			GrammalecteViewHelper.DATA_TAG)
-		sensitive = helper != None and not helper.is_readonly()
-		autoActive = helper != None and helper.get_config().get_value(
-			GrammalecteConfig.AUTO_ANALYZE_ACTIVE)
-		self.__actionGroup.set_sensitive(sensitive)
-		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
-
 	def on_tab_added(self, action, tab):
 		""" Mange the tab added event """
 		self.__associate(tab.get_view())
@@ -136,16 +124,25 @@ class GrammalecteWindowHelper:
 		self.__deassociate(tab.get_view())
 		self.update_ui()
 
+	def update_ui(self):
+		""" UI update requested """
+		helper = self.__get_active_helper()
+		sensitive = helper != None and not helper.is_readonly()
+		autoActive = helper != None and helper.get_config().get_value(
+			GrammalecteConfig.AUTO_ANALYZE_ACTIVE)
+		self.__actionGroup.set_sensitive(sensitive)
+		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
+
 	def __associate(self, view):
 		""" Associate view and helper """
-		helper = view.get_data(GrammalecteViewHelper.DATA_TAG)
+		helper = self.__get_associated_helper(view)
 		if helper == None:
 			helper = GrammalecteViewHelper(view, view.get_buffer(), self)
 			view.set_data(GrammalecteViewHelper.DATA_TAG, helper)
 
 	def __deassociate(self, view):
 		""" Deassociate view and helper, if any """
-		helper = view.get_data(GrammalecteViewHelper.DATA_TAG)
+		helper = self.__get_associated_helper(view)
 		if helper != None:
 			helper.deactivate()
 			view.set_data(GrammalecteViewHelper.DATA_TAG, None)
@@ -155,19 +152,27 @@ class GrammalecteWindowHelper:
 
 	def on_menu_auto(self, action):
 		""" Manage automatic toggle menu """
-		tab = self.__window.get_active_tab()
-		view = None if tab == None else tab.get_view()
-		helper = None if view == None else view.get_data(
-			GrammalecteViewHelper.DATA_TAG)
+		helper = self.__get_active_helper()
 		if helper != None and not helper.is_readonly():
 			helper.set_auto_analyze(action.get_active())
 
 	def on_menu_config(self, action):
 		""" Change configuration """
-		dialog = GrammalecteConfigDlg()
-		if dialog.run():
+		dlg = GrammalecteConfigDlg(self.__window, self.__get_active_helper())
+		if dlg.run():
 			pass
 
 	def get_analyzer(self):
 		return self.__analyzer
+
+	def __get_active_helper(self):
+		""" Get the helper of active view """
+		tab = self.__window.get_active_tab()
+		view = None if tab == None else tab.get_view()
+		return self.__get_associated_helper(view)
+
+	def __get_associated_helper(self, view):
+		""" Get the helper associated to the view """
+		return None if view == None else \
+			view.get_data(GrammalecteViewHelper.DATA_TAG)
 
