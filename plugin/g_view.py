@@ -138,7 +138,7 @@ class GrammalecteViewHelper(SelfConfigContainer):
 
 	def is_readonly(self):
 		""" Indicate if the associated document is read-only """
-		return self.__document.get_readonly()
+		return not self.__view.get_editable()
 
 	def get_view(self):
 		""" Get the (real) view attached to the helper """
