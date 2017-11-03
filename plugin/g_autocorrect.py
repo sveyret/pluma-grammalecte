@@ -109,7 +109,7 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			"analyze-started", self.on_analyze_started)
 		self.__eventAnalFinishId = analyzer.connect(
 			"analyze-finished", self.on_analyze_finished)
-		self.__ask_request()
+		self.ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
@@ -124,16 +124,16 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def on_content_changed(self, *ignored):
 		""" Called when buffer content changed """
-		self.__ask_request()
+		self.ask_request()
 
 	def on_buffer_changed(self, *ignored):
 		""" Called when the buffer was changed """
 		self.__bufferData.terminate()
 		self.__bufferData = _BufferData(
 			self.__viewHelper.get_view().get_buffer(), self.on_content_changed)
-		self.__ask_request()
+		self.ask_request()
 
-	def __ask_request(self):
+	def ask_request(self):
 		""" Called when request is needed """
 		if not self.__requested:
 			self.__requested = True
@@ -146,6 +146,8 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def get_text(self):
 		""" Get the text of the requester """
+		if self.__bufferData == None:
+			return ""
 		self.__curBuffer = self.__bufferData.vBuffer
 		return self.__curBuffer.get_slice(
 			self.__curBuffer.get_start_iter(), self.__curBuffer.get_end_iter())

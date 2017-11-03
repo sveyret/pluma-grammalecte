@@ -91,6 +91,11 @@ class GrammalecteViewHelper(SelfConfigContainer):
 			self.__autocorrect.deactivate()
 			self.__autocorrect = None
 
+	def refresh_analyze(self):
+		""" Execute the analyze as it may be obsolete """
+		if self.__autocorrect != None:
+			self.__autocorrect.ask_request()
+
 	def on_doc_saved(self, document, error):
 		""" Manage the document saved event """
 		if error == None:

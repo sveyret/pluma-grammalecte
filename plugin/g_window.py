@@ -160,7 +160,9 @@ class GrammalecteWindowHelper:
 		""" Change configuration """
 		dlg = GrammalecteConfigDlg(self.__window, self.__get_active_helper())
 		if dlg.run():
-			pass
+			helper = self.__get_active_helper()
+			if helper != None:
+				helper.refresh_analyze()
 
 	def get_analyzer(self):
 		return self.__analyzer
