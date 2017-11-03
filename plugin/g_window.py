@@ -148,7 +148,10 @@ class GrammalecteWindowHelper:
 		helper = self.__get_active_helper()
 		sensitive = helper != None and not helper.is_readonly()
 		autoActive = helper != None and helper.is_auto_checked()
-		self.__actionGroup.set_sensitive(sensitive)
+		self.__actionGroup.get_action("CheckGrammalecte").set_sensitive(
+			sensitive)
+		self.__actionGroup.get_action("AutoGrammalecte").set_sensitive(
+			sensitive)
 		self.__actionGroup.get_action("AutoGrammalecte").set_active(autoActive)
 
 	def __associate(self, view):
