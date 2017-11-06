@@ -36,15 +36,8 @@ import pango
 from g_config import GrammalecteConfig
 
 from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
-
-class _GJsonEntry:
-	""" Entries of the Grammalecte JSON file """
-	GRAMMAR = "lGrammarErrors"
-	SPELLING = "lSpellingErrors"
-	LINE_START = "nStartY"
-	CHAR_START = "nStartX"
-	LINE_END = "nEndY"
-	CHAR_END = "nEndX"
+from g_converter import GErrorConverter
+from g_error import GErrorDesc
 
 class _BufferData:
 	""" The data for the current buffer """
@@ -90,9 +83,6 @@ class _BufferData:
 
 class GrammalecteAutoCorrector(GrammalecteRequester):
 	""" The automatic corrector """
-
-	__SPELL_PARAM = GrammalecteConfig.ANALYZE_OPTIONS + "/" \
-		+ GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING
 
 	def __init__(self, viewHelper):
 		""" Initialize the corrector """
@@ -164,29 +154,22 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			return
 		self.__bufferData.clear_tags(
 			[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
-		for parErrors in result:
-			for grammError in parErrors[_GJsonEntry.GRAMMAR]:
-				start, end = self.__extract_limits(grammError)
-				self.__curBuffer.apply_tag(
-					self.__bufferData.grammarTag, start, end)
-			checkSpell = self.get_config().get_value(
-				GrammalecteAutoCorrector.__SPELL_PARAM)
-			if checkSpell != False:
-				for spellError in parErrors[_GJsonEntry.SPELLING]:
-					start, end = self.__extract_limits(spellError)
-					self.__curBuffer.apply_tag(
-						self.__bufferData.spellingTag, start, end)
+		store = GErrorConverter(self.get_config()).convert(result)
+		for error in store:
+			start, end = self.__convert_limits(error)
+			tag = self.__bufferData.spellingTag if error[GErrorDesc.OPTION] \
+				== GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING \
+				else self.__bufferData.grammarTag
+			self.__curBuffer.apply_tag(tag, start, end)
 		self.__curBuffer = None
 
-	def __extract_limits(self, errorDesc):
-		""" Extract the limits from error description """
+	def __convert_limits(self, error):
+		""" Convert the limits from error to iterator """
 		limits = []
-		for limitDesc in [
-			(_GJsonEntry.LINE_START, _GJsonEntry.CHAR_START),
-			(_GJsonEntry.LINE_END, _GJsonEntry.CHAR_END)]:
-			line, offset = limitDesc
-			iterator = self.__curBuffer.get_iter_at_line(errorDesc[line] - 1)
-			iterator.set_line_offset(errorDesc[offset])
+		for limitDesc in [GErrorDesc.START, GErrorDesc.END]:
+			line, offset = error[limitDesc]
+			iterator = self.__curBuffer.get_iter_at_line(line)
+			iterator.set_line_offset(offset)
 			limits.append(iterator)
 		return limits
 
