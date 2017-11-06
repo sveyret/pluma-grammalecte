@@ -31,9 +31,15 @@
 # temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
 # <http://www.gnu.org/licenses>.
 
+import doctest
 import unittest
 
+import g_config
 from g_config import DictConfig
+
+def load_tests(loader, tests, ignore):
+	tests.addTests(doctest.DocTestSuite(g_config))
+	return tests
 
 class TestDictConfig(unittest.TestCase):
 	def setUp(self):
