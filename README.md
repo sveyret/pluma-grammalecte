@@ -36,6 +36,10 @@ Ce programme est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GAR
 
 Vous devez avoir reçu une copie de la GNU General Public License en même temps que ce programme ; si ce n'est pas le cas, consultez http://www.gnu.org/licenses.
 
+# Aperçu
+
+![Infobulle](https://user-images.githubusercontent.com/6187210/32458521-fd71a990-c32c-11e7-8b2b-43764d608480.png)
+
 # Pré-requis
 
 Pour utiliser ce greffon, vous devez avoir :
