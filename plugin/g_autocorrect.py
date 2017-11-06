@@ -31,13 +31,14 @@
 # temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
 # <http://www.gnu.org/licenses>.
 
+import gtk
 import pango
 
 from g_config import GrammalecteConfig
 
 from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
 from g_converter import GErrorConverter
-from g_error import GErrorDesc
+from g_error import GErrorDesc, GErrorStore
 
 class _BufferData:
 	""" The data for the current buffer """
@@ -89,7 +90,11 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__viewHelper = viewHelper
 		self.__requested = False
 		self.__curBuffer = None
+		self.__store = GErrorStore()
 		view = self.__viewHelper.get_view()
+		view.set_property("has_tooltip", True)
+		self.__eventTooltipId = view.connect(
+			"query-tooltip", self.on_query_tooltip)
 		self.__bufferData = _BufferData(
 			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
@@ -109,8 +114,28 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		view = self.__viewHelper.get_view()
 		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
+		view.disconnect(self.__eventTooltipId)
 		self.__bufferData = None
+		self.__store = None
+		self.__curBuffer = None
 		self.__viewHelper = None
+
+	def on_query_tooltip(self, widget, x, y, keyboard, tooltip):
+		""" Manage tooltip query event """
+		if keyboard:
+			buff = widget.get_buffer()
+			pos = buff.get_iter_at_mark(buff.get_insert())
+		else:
+			buffPos = widget.window_to_buffer_coords(gtk.TEXT_WINDOW_TEXT, x, y)
+			pos = widget.get_iter_at_location(*buffPos)
+		line = pos.get_line()
+		offset = pos.get_line_offset()
+		error = self.__store.search((line, offset))
+		if error != None:
+			tooltip.set_markup(error[GErrorDesc.DESCRIPTION])
+			return True
+		else:
+			return False
 
 	def on_content_changed(self, *ignored):
 		""" Called when buffer content changed """
@@ -154,8 +179,8 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			return
 		self.__bufferData.clear_tags(
 			[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
-		store = GErrorConverter(self.get_config()).convert(result)
-		for error in store:
+		self.__store = GErrorConverter(self.get_config()).convert(result)
+		for error in self.__store:
 			start, end = self.__convert_limits(error)
 			tag = self.__bufferData.spellingTag if error[GErrorDesc.OPTION] \
 				== GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING \

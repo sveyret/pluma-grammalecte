@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-03 09:26+0100\n"
+"POT-Creation-Date: 2017-11-06 14:06+0100\n"
 "PO-Revision-Date: 2017-10-21 21:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -60,6 +60,10 @@ msgstr "Erreur : le fichier de configuration « {} » n'a pas pu être enregistr
 #: plugin/g_config.py:331
 msgid "Error: configuration could not be saved"
 msgstr "Erreur : la configuration n'a pas pu être enregistrée"
+
+#: plugin/g_converter.py:74
+msgid "Unknown word."
+msgstr "Mot inconnu."
 
 #: plugin/g_window.py:103
 msgid "_Check Syntax..."

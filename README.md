@@ -104,7 +104,7 @@ Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avert
 
 ## Version 0.4
 
-- [ ] Afficher une info-bulle sur les erreurs.
+- [x] Afficher une info-bulle sur les erreurs.
 - [ ] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
 
 ## Version 1.0
