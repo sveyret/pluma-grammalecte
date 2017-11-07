@@ -289,7 +289,10 @@ class DictConfig:
 			:param level: (optional) the parent level.
 			:type level: int
 		"""
-		self.__config = {}
+		if level == 0:
+			self.__config = {}
+		elif self.__parent is not None:
+			self.__parent.clear(level - 1)
 
 	def close(self):
 		"""
