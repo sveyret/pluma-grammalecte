@@ -38,6 +38,7 @@
 """
 
 import glib
+import gobject
 import json
 import os
 
@@ -74,7 +75,7 @@ class SelfConfigContainer:
 		"""
 		pass
 
-class DictConfig:
+class DictConfig(gobject.GObject):
 	"""
 		A configuration stored as a dictionnary.
 
@@ -88,6 +89,17 @@ class DictConfig:
 		Configuration values are accessed throw xPath-like definition.
 	"""
 
+	__gsignals__ = {
+		"updated": (
+			gobject.SIGNAL_RUN_LAST,
+			gobject.TYPE_NONE,
+			(gobject.TYPE_INT, gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)),
+		"cleared": (
+			gobject.SIGNAL_RUN_LAST,
+			gobject.TYPE_NONE,
+			(gobject.TYPE_INT,))
+	}
+
 	def __init__(self, data, parent = None):
 		"""
 			Initialize the instance.
@@ -99,8 +111,8 @@ class DictConfig:
 			:type data: dict, str
 			:type parent: DictConfig, None
 		"""
-		self.__parent = parent
-		self.__dirty = False
+		gobject.GObject.__init__(self)
+
 		if data is None:
 			self.__init_config({})
 		elif type(data) is str:
@@ -111,6 +123,15 @@ class DictConfig:
 			self.__init_self_config(data)
 		else:
 			raise AttributeError
+
+		self.__dirty = False
+
+		self.__parent = parent
+		if self.__parent is not None:
+			self.__eventUpdatedId = \
+				self.__parent.connect("updated", self.on_updated)
+			self.__eventClearedId = \
+				self.__parent.connect("cleared", self.on_cleared)
 
 	def __init_file(self, filename):
 		"""
@@ -151,6 +172,29 @@ class DictConfig:
 			self.__config = json.loads(self.__filedef.get_self_config())
 		except:
 			pass
+
+	def __del__(self):
+		"""
+			Delete the configuration object.
+		"""
+		if self.__parent is not None:
+			self.__parent.disconnect(self.__eventUpdatedId)
+			self.__parent.disconnect(self.__eventClearedId)
+		self.__parent = None
+		self.__config = None
+		self.__filedef = None
+
+	def on_updated(self, config, level, xPath, newValue):
+		"""
+			Manage the updated event comming from parent.
+		"""
+		self.emit("updated", level + 1, xPath, newValue)
+
+	def on_cleared(self, config, level):
+		"""
+			Manage the cleared event comming from parent.
+		"""
+		self.emit("cleared", level + 1, xPath, newValue)
 
 	def get_value(self, xPath):
 		"""
@@ -215,9 +259,9 @@ class DictConfig:
 			if self.__find(xPath) != newValue:
 				self.__update(xPath, newValue)
 				self.__dirty = True
-		else:
-			if self.__parent is not None:
-				self.__parent.set_value(xPath, newValue, level - 1)
+				self.emit("updated", 0, xPath, newValue)
+		elif self.__parent is not None:
+			self.__parent.set_value(xPath, newValue, level - 1)
 
 	def __find(self, xPath):
 		"""
@@ -291,6 +335,7 @@ class DictConfig:
 		"""
 		if level == 0:
 			self.__config = {}
+			self.emit("cleared", 0)
 		elif self.__parent is not None:
 			self.__parent.clear(level - 1)
 
