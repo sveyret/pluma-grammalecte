@@ -64,13 +64,13 @@ class GrammalecteConfigDlg:
 		for button in self.__dialog.get_action_area().get_children():
 			if button.get_label() == "gtk-clear":
 				self.__button_clear = button
-		if self.__button_clear == None:
+		if self.__button_clear is None:
 			raise Exception(_("Internal error"))
 		self.__button_clear.set_tooltip_text(
 			_("Clear all file specific settings"))
 
 		box = self.__create_scope_box()
-		if box != None:
+		if box is not None:
 			self.__dialog.get_content_area().pack_start(box, False)
 		self.__extract_options()
 
@@ -86,7 +86,7 @@ class GrammalecteConfigDlg:
 
 	def __create_scope_box(self):
 		""" Create the scope box """
-		if self.__viewHelper == None:
+		if self.__viewHelper is None:
 			self.__globalToggle = None
 			return None
 		else:
@@ -103,7 +103,7 @@ class GrammalecteConfigDlg:
 
 	def __extract_options(self):
 		""" Grab the options from Grammalecte """
-		config = GrammalecteConfig() if self.__viewHelper == None else \
+		config = GrammalecteConfig() if self.__viewHelper is None else \
 			self.__viewHelper.get_config()
 
 		waitDlg = gtk.MessageDialog(
@@ -151,7 +151,7 @@ class GrammalecteConfigDlg:
 			"True", _("Check Spelling"))
 		for optionLine in rawOptions.splitlines():
 			match = pattern.match(optionLine)
-			if match != None:
+			if match is not None:
 				self.__set_option(*match.groups())
 
 	def __set_option(self, optionName, optionValue, optionDesc):
@@ -196,7 +196,7 @@ class GrammalecteConfigDlg:
 
 	def run(self):
 		""" Execute the dialog """
-		config = GrammalecteConfig() if self.__viewHelper == None else \
+		config = GrammalecteConfig() if self.__viewHelper is None else \
 			self.__viewHelper.get_config()
 
 		response = GrammalecteConfigDlg.__RESPONSE_CLEAR
@@ -206,7 +206,7 @@ class GrammalecteConfigDlg:
 				self.__clear_config(config)
 		self.__dialog.destroy()
 		if response == gtk.RESPONSE_ACCEPT:
-			forGlobal = True if self.__globalToggle == None else \
+			forGlobal = True if self.__globalToggle is None else \
 				self.__globalToggle.get_active()
 			self.__update_config(forGlobal)
 			self.__save_config(config)

@@ -63,7 +63,7 @@ class MockRequester(GrammalecteRequester):
 
 	def on_result(self, analyzer, requester, result):
 		""" Set the result of the request """
-		if requester != self:
+		if requester is not self:
 			return
 		for err_in_paragraph in result:
 			for grammar_error in err_in_paragraph["lGrammarErrors"]:

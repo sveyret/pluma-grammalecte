@@ -79,11 +79,11 @@ class _BNode:
 
 			This will create a generator to iterate on all elements.
 		"""
-		if self.__left != None:
+		if self.__left is not None:
 			for element in self.__left:
 				yield element
 		yield self.__element
-		if self.__right != None:
+		if self.__right is not None:
 			for element in self.__right:
 				yield element
 
@@ -95,9 +95,9 @@ class _BNode:
 			:rtype: int
 		"""
 		count = 1
-		if self.__left != None:
+		if self.__left is not None:
 			count += len(self.__left)
-		if self.__right != None:
+		if self.__right is not None:
 			count += len(self.__right)
 		return count
 
@@ -109,10 +109,10 @@ class _BNode:
 			:rtype: str
 		"""
 		result = ""
-		if self.__left != None:
+		if self.__left is not None:
 			result += str(self.__left) + ", "
 		result += str(self.__element)
-		if self.__right != None:
+		if self.__right is not None:
 			result += ", " + str(self.__right)
 		return result
 
@@ -134,14 +134,14 @@ class _BNode:
 		"""
 		result = comparator(node.__element, self.__element)
 		if result < 0:
-			if self.__left == None:
+			if self.__left is None:
 				self.__left = node
 				node.__parent = self
 				self.__invalidate_height()
 			else:
 				self.__left.add(node, comparator)
 		else:
-			if self.__right == None:
+			if self.__right is None:
 				self.__right = node
 				node.__parent = self
 				self.__invalidate_height()
@@ -175,7 +175,7 @@ class _BNode:
 			else:
 				self.__right.__right_rotate()
 				self.__left_rotate()
-		if self.__parent != None:
+		if self.__parent is not None:
 			return self.__parent.balance()
 		else:
 			return self
@@ -188,13 +188,13 @@ class _BNode:
 		"""
 		rotated = self.__right
 		rotated.__parent = self.__parent
-		if rotated.__parent != None:
+		if rotated.__parent is not None:
 			if rotated.__parent.__left is self:
 				rotated.__parent.__left = rotated
 			elif rotated.__parent.__right is self:
 				rotated.__parent.__right = rotated
 		self.__right = rotated.__left
-		if self.__right != None:
+		if self.__right is not None:
 			self.__right.__parent = self
 		rotated.__left = self
 		self.__parent = rotated
@@ -208,13 +208,13 @@ class _BNode:
 		"""
 		rotated = self.__left
 		rotated.__parent = self.__parent
-		if rotated.__parent != None:
+		if rotated.__parent is not None:
 			if rotated.__parent.__left is self:
 				rotated.__parent.__left = rotated
 			elif rotated.__parent.__right is self:
 				rotated.__parent.__right = rotated
 		self.__left = rotated.__right
-		if self.__left != None:
+		if self.__left is not None:
 			self.__left.__parent = self
 		rotated.__right = self
 		self.__parent = rotated
@@ -237,9 +237,9 @@ class _BNode:
 		result = comparator(self.__element)
 		if result == 0:
 			return self
-		elif result < 0 and self.__right != None:
+		elif result < 0 and self.__right is not None:
 			return self.__right.search(comparator)
-		elif result > 0 and self.__left != None:
+		elif result > 0 and self.__left is not None:
 			return self.__left.search(comparator)
 		else:
 			return None
@@ -261,7 +261,7 @@ class _BNode:
 			be recalculated if needed.
 		"""
 		self.__height = None
-		if self.__parent != None:
+		if self.__parent is not None:
 			self.__parent.__invalidate_height()
 
 	def get_height(self):
@@ -270,7 +270,7 @@ class _BNode:
 
 			If the height is unknown, it will be calculated.
 		"""
-		if self.__height == None:
+		if self.__height is None:
 			leftHeight = _BNode.__height(self.__left)
 			rightHeight = _BNode.__height(self.__right)
 			self.__height = max(leftHeight, rightHeight) + 1
@@ -284,7 +284,7 @@ class _BNode:
 			:param node: the node for which to get the height.
 			:type node: _BNode
 		"""
-		return -1 if node == None else node.get_height()
+		return -1 if node is None else node.get_height()
 
 class AvlTree:
 	"""
@@ -347,7 +347,7 @@ class AvlTree:
 			:type element: any
 		"""
 		self.__comparator = comparator
-		self.__root = None if element == None else _BNode(element)
+		self.__root = None if element is None else _BNode(element)
 
 	def __iter__(self):
 		"""
@@ -355,7 +355,7 @@ class AvlTree:
 
 			This will create a generator to iterate on all elements.
 		"""
-		if self.__root != None:
+		if self.__root is not None:
 			for element in self.__root:
 				yield element
 
@@ -366,7 +366,7 @@ class AvlTree:
 			:return: the count of elements in the tree.
 			:rtype: int
 		"""
-		return 0 if self.__root == None else len(self.__root)
+		return 0 if self.__root is None else len(self.__root)
 
 	def __str__(self):
 		"""
@@ -375,7 +375,7 @@ class AvlTree:
 			:return: the string representing the tree.
 			:rtype: str
 		"""
-		if self.__root == None:
+		if self.__root is None:
 			return "<empty>"
 		else:
 			return str(self.__root)
@@ -411,19 +411,19 @@ class AvlTree:
 				comparison function.
 			:type data: any or function
 		"""
-		if self.__root == None:
+		if self.__root is None:
 			result = None
 		elif callable(data):
 			result = self.__root.search(data)
 		else:
 			result = self.__root.search(lambda e: self.__comparator(e, data))
-		if result == None:
+		if result is None:
 			return None
 		else:
 			return result.get_element()
 
 	def get_height(self):
-		return -1 if self.__root == None else self.__root.get_height()
+		return -1 if self.__root is None else self.__root.get_height()
 
 class GErrorDesc:
 	""" Entries which must be in error object """

@@ -70,7 +70,8 @@ class GErrorConverter:
 			:param config: the configuration to use.
 			:type config: GrammalecteConfig
 		"""
-		self.__checkSpell = config.get_value(GErrorConverter.__SPELL_PARAM)
+		self.__checkSpell = \
+			config.get_value(GErrorConverter.__SPELL_PARAM) is True
 		self.__spellDescription = _("Unknown word.")
 
 	def convert(self, analyzerFormat):
@@ -86,7 +87,7 @@ class GErrorConverter:
 		for parErrors in analyzerFormat:
 			for grammError in parErrors[_GJsonEntry.GRAMMAR]:
 				store.add(self.__buildGrammError(grammError))
-			if self.__checkSpell != False:
+			if self.__checkSpell:
 				for spellError in parErrors[_GJsonEntry.SPELLING]:
 					store.add(self.__buildSpellError(spellError))
 		return store

@@ -48,7 +48,7 @@ class _BufferData:
 	def __init__(self, vBuffer, callback):
 		""" Initialize the buffer data """
 		self.vBuffer = vBuffer
-		if self.vBuffer != None:
+		if self.vBuffer is not None:
 			self.grammarTag, self.spellingTag = self.__init_tag(
 				[_BufferData.__TAG_GRAMMAR, _BufferData.__TAG_SPELLING])
 			self.__eventChangedId = self.vBuffer.connect("changed", callback)
@@ -58,7 +58,7 @@ class _BufferData:
 		tags = []
 		for tagName in tagNames:
 			tag = self.vBuffer.get_tag_table().lookup(tagName)
-			if tag == None:
+			if tag is None:
 				tag = self.vBuffer.create_tag(
 					tagName, underline = pango.UNDERLINE_ERROR)
 			tags.append(tag)
@@ -66,7 +66,7 @@ class _BufferData:
 
 	def terminate(self):
 		""" Terminate usage of this buffer data """
-		if self.vBuffer != None:
+		if self.vBuffer is not None:
 			self.vBuffer.disconnect(self.__eventChangedId)
 			self.clear_tags([self.grammarTag, self.spellingTag])
 			self.spellingTag = None
@@ -76,7 +76,7 @@ class _BufferData:
 	def clear_tags(self, tags):
 		""" Clear the tags from buffer """
 		for tag in tags:
-			if tag != None:
+			if tag is not None:
 				self.vBuffer.remove_tag(
 					tag,
 					self.vBuffer.get_start_iter(),
@@ -131,7 +131,7 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		line = pos.get_line()
 		offset = pos.get_line_offset()
 		error = self.__store.search((line, offset))
-		if error != None:
+		if error is not None:
 			tooltip.set_markup(error[GErrorDesc.DESCRIPTION])
 			return True
 		else:
@@ -156,12 +156,12 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def get_config(self):
 		""" Get the configuration for the requester """
-		return None if self.__viewHelper == None else \
+		return None if self.__viewHelper is None else \
 			self.__viewHelper.get_config()
 
 	def get_text(self):
 		""" Get the text of the requester """
-		if self.__bufferData == None:
+		if self.__bufferData is None:
 			return ""
 		self.__curBuffer = self.__bufferData.vBuffer
 		return self.__curBuffer.get_slice(
@@ -169,13 +169,14 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 
 	def on_analyze_started(self, analyzer, requester):
 		""" Indicate that analyze has started """
-		if requester != self:
+		if requester is not self:
 			return
 		self.__requested = False
 
 	def on_analyze_finished(self, analyzer, requester, result):
 		""" Set the result of the request """
-		if requester != self or self.__curBuffer != self.__bufferData.vBuffer:
+		if requester is not self or \
+			self.__curBuffer is not self.__bufferData.vBuffer:
 			return
 		self.__bufferData.clear_tags(
 			[self.__bufferData.grammarTag, self.__bufferData.spellingTag])

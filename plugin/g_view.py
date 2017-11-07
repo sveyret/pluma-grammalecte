@@ -84,29 +84,29 @@ class GrammalecteViewHelper(SelfConfigContainer):
 
 	def __set_auto_analyze(self, active):
 		""" Set auto-analyze without changing the configuration """
-		if active and self.__autocorrect == None:
+		if active and self.__autocorrect is None:
 			self.__autocorrect = GrammalecteAutoCorrector(self)
-		elif not active and self.__autocorrect != None:
+		elif not active and self.__autocorrect is not None:
 			self.__autocorrect.deactivate()
 			self.__autocorrect = None
 
 	def refresh_analyze(self):
 		""" Execute the analyze as it may be obsolete """
-		if self.__autocorrect != None:
+		if self.__autocorrect is not None:
 			self.__autocorrect.ask_request()
 
 	def on_doc_saved(self, document, error):
 		""" Manage the document saved event """
-		if error == None:
+		if error is None:
 			self.__filename = self.__document.get_uri()
 			self.__gFile = None if self.__filename is None else \
 				gio.File(self.__filename)
 
 	def on_doc_loaded(self, document, error):
 		""" Manage the document loaded event """
-		if error == None and (self.__document != document or \
+		if error is None and (self.__document is not document or \
 			self.__filename != document.get_uri() or \
-			(self.__autocorrect != None) != self.is_auto_checked()):
+			(self.__autocorrect is not None) != self.is_auto_checked()):
 			view = self.__view
 			windowHelper = self.__windowHelper
 			self.deactivate()
@@ -116,18 +116,18 @@ class GrammalecteViewHelper(SelfConfigContainer):
 	def get_self_config(self):
 		""" Get the configuration from metadata """
 		config = None
-		if self.__gFile != None:
+		if self.__gFile is not None:
 			info = self.__gFile.query_info(
 				GrammalecteViewHelper.__CONFIG_METADATA)
 			config = info.get_attribute_as_string(
 				GrammalecteViewHelper.__CONFIG_METADATA)
-		if config == None:
+		if config is None:
 			config = SelfConfigContainer.EMPTY
 		return config
 
 	def set_self_config(self, config):
 		""" Set the configuration in metadata """
-		if self.__gFile != None:
+		if self.__gFile is not None:
 			self.__gFile.set_attribute_string(
 				GrammalecteViewHelper.__CONFIG_METADATA, config)
 

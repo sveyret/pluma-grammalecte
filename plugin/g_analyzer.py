@@ -106,7 +106,7 @@ class _TempFile():
 
 	def close(self):
 		""" Close the descriptor if open """
-		if self.__descriptor != None:
+		if self.__descriptor is not None:
 			if type(self.__descriptor) is int:
 				os.close(self.__descriptor)
 			else:
@@ -181,7 +181,7 @@ class _StateWaiting(_State):
 		""" Initialize the next state """
 		requester = self._analyzer._queue.get()
 		config = requester.get_config()
-		if config == None:
+		if config is None:
 			return self
 		self._analyzer._input.write(requester.get_text())
 		self._analyzer.emit("analyze-started", requester)
@@ -240,7 +240,7 @@ class _StateAnalyzing(_State):
 
 	def _is_transition_open(self):
 		""" Test if transition is open """
-		return self.__process.poll() != None
+		return self.__process.poll() is not None
 
 	def _start_next_state(self):
 		""" Initialize the next state """
@@ -294,7 +294,7 @@ class GrammalecteAnalyzer(gobject.GObject):
 			self.__run)
 
 	def __run(self):
-		if self.__state == None or self._queue == None:
+		if self.__state is None or self._queue is None:
 			return False
 		else:
 			try:

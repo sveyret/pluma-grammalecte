@@ -101,7 +101,7 @@ class DictConfig:
 		"""
 		self.__parent = parent
 		self.__dirty = False
-		if data == None:
+		if data is None:
 			self.__init_config({})
 		elif type(data) is str:
 			self.__init_file(data)
@@ -166,9 +166,9 @@ class DictConfig:
 			:rtype: any
 		"""
 		result = self.__find(xPath)
-		if result == None and self.__parent != None:
+		if result is None and self.__parent is not None:
 			result = self.__parent.get_value(xPath)
-		elif type(result) is dict and self.__parent != None:
+		elif type(result) is dict and self.__parent is not None:
 			result = {}
 			for key in self.__get_keys(xPath):
 				result[key] = self.get_value(xPath + "/" + key)
@@ -187,7 +187,7 @@ class DictConfig:
 			:rtype: set
 		"""
 		keys = set()
-		if self.__parent != None:
+		if self.__parent is not None:
 			keys.update(self.__parent.__get_keys(xPath))
 		value = self.__find(xPath)
 		if type(value) is dict:
@@ -216,7 +216,7 @@ class DictConfig:
 				self.__update(xPath, newValue)
 				self.__dirty = True
 		else:
-			if self.__parent != None:
+			if self.__parent is not None:
 				self.__parent.set_value(xPath, newValue, level - 1)
 
 	def __find(self, xPath):
@@ -264,13 +264,13 @@ class DictConfig:
 					name = int(name)
 				except ValueError:
 					pass
-				if oldName != None:
+				if oldName is not None:
 					if not oldName in entry:
 						entry[oldName] = {}
 					entry = entry[oldName]
 				oldName = name
-			if oldName != None:
-				if newValue == None:
+			if oldName is not None:
+				if newValue is None:
 					del entry[oldName]
 				else:
 					entry[oldName] = newValue
@@ -301,9 +301,9 @@ class DictConfig:
 			.. note:: A closed configuration can still be used, but should be
 			closed again after.
 		"""
-		if self.__parent != None:
+		if self.__parent is not None:
 			self.__parent.close()
-		if self.__filedef != None and self.__dirty:
+		if self.__filedef is not None and self.__dirty:
 			if type(self.__filedef) is str:
 				self.__save_file()
 			else:
@@ -403,7 +403,7 @@ class GrammalecteConfig(DictConfig):
 			:type selfConfig: SelfConfigContainer
 		"""
 		# Initialize global instance
-		if GrammalecteConfig.__globalInstance == None:
+		if GrammalecteConfig.__globalInstance is None:
 			defaultConfig = DictConfig(GrammalecteConfig.__DEFAULT_CONFIG)
 			systemConfig = DictConfig(GrammalecteConfig.__SYSTEM_CONFIG_FILE,
 				defaultConfig)
@@ -420,7 +420,7 @@ class GrammalecteConfig(DictConfig):
 
 			This will save global configuration files if needed.
 		"""
-		if GrammalecteConfig.__globalInstance != None:
+		if GrammalecteConfig.__globalInstance is not None:
 			GrammalecteConfig.__globalInstance.close()
 			GrammalecteConfig.__globalInstance = None
 

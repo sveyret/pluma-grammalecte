@@ -51,7 +51,7 @@ class GrammalectePlugin(pluma.Plugin):
 	def deactivate(self, window):
 		""" Stop the plugin """
 		windowHelper = window.get_data(GrammalecteWindowHelper.DATA_TAG)
-		if windowHelper != None:
+		if windowHelper is not None:
 			windowHelper.deactivate()
 			window.set_data(GrammalecteWindowHelper.DATA_TAG, None)
 		GrammalecteConfig.terminate()
