@@ -179,11 +179,7 @@ class GrammalecteWindowHelper:
 
 	def on_menu_config(self, action):
 		""" Change configuration """
-		dlg = GrammalecteConfigDlg(self.__window, self.__get_active_helper())
-		if dlg.run():
-			helper = self.__get_active_helper()
-			if helper is not None:
-				helper.refresh_analyze()
+		GrammalecteConfigDlg(self.__window, self.__get_active_helper()).run()
 
 	def get_analyzer(self):
 		return self.__analyzer
