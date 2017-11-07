@@ -73,6 +73,19 @@ class _BNode:
 		self.__right = None
 		self.__height = None
 
+	def saw_children(self):
+		"""
+			Saw the children from the tree starting at this node.
+		"""
+		if self.__left is not None:
+			self.__left.saw_children()
+			self.__left.__parent = None
+			self.__left = None
+		if self.__right is not None:
+			self.__right.saw_children()
+			self.__right.__parent = None
+			self.__right = None
+
 	def __iter__(self):
 		"""
 			Iterate on the tree for which this node is root.
@@ -348,6 +361,17 @@ class AvlTree:
 		"""
 		self.__comparator = comparator
 		self.__root = None if element is None else _BNode(element)
+
+	def __del__(self):
+		"""
+			Delete the tree.
+
+			This deletion should imply node deletion too, but because there are
+			mutual dependencies, they may not be correctly garbage collected,
+			so we need to explicitely delete them.
+		"""
+		if self.__root is not None:
+			self.__root.saw_children()
 
 	def __iter__(self):
 		"""
