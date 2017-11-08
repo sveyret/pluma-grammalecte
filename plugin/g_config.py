@@ -405,6 +405,7 @@ class GrammalecteConfig(DictConfig):
 	ANALYZE_OPTIONS = "analyze-options"
 	AUTO_ANALYZE_ACTIVE = "auto-analyze-active"
 	AUTO_ANALYZE_TIMER = "auto-analyze-timer"
+	ANALYZE_WAIT_TICKS = "analyze-wait-ticks"
 	GRAMMALECTE_PYTHON_EXE = "g-python-exe"
 	GRAMMALECTE_CLI = "g-cli"
 	GRAMMALECTE_ANALYZE_PARAMS = "g-analyze-params"
@@ -425,6 +426,7 @@ class GrammalecteConfig(DictConfig):
 		ANALYZE_OPTIONS: {},
 		AUTO_ANALYZE_ACTIVE: False,
 		AUTO_ANALYZE_TIMER: 500,
+		ANALYZE_WAIT_TICKS: 12,
 		GRAMMALECTE_PYTHON_EXE: "python3",
 		GRAMMALECTE_CLI: "/opt/grammalecte/cli.py",
 		__CLI_PARAMS: {

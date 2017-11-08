@@ -94,7 +94,8 @@ Les paramètres configurables sont les suivants :
 * `locale-dir` contient le chemin vers le répertoire des traductions ;
 * `analyze-options` contient les options d'analyse et leurs valeurs ;
 * `auto-analyze-active` indique si la vérification automatique est activée ou non ;
-* `auto-analyze-timer`<sup>*</sup> contient la fréquence de rafraichissement pour l'analyse automatique.
+* `auto-analyze-timer`<sup>*</sup> contient la fréquence de rafraichissement pour l'analyse automatique ;
+* `analyze-wait-ticks`<sup>*</sup> contient la durée d'attente (en dixièmes de seconde) sans évènement avant de lancer l'analyse automatique ;
 * `g-python-exe` contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
 * `g-cli` contient le chemin complet vers la ligne de commande de Grammalecte ;
 * `g-cli-params`<sup>*</sup> contient des paramètres à utiliser avec la ligne de commande de Grammalecte ;
@@ -110,6 +111,7 @@ Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avert
 
 - [x] Afficher une info-bulle sur les erreurs.
 - [ ] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
+- [x] Mettre un temps de non-réponse pour cumuler les modifications.
 
 ## Version 1.0
 

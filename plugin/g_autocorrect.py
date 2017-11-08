@@ -32,6 +32,7 @@
 # <http://www.gnu.org/licenses>.
 
 import gtk
+import gobject
 import pango
 
 from g_config import GrammalecteConfig
@@ -84,6 +85,7 @@ class _BufferData:
 
 class GrammalecteAutoCorrector(GrammalecteRequester):
 	""" The automatic corrector """
+	__TICK_DURATION = 100
 
 	def __init__(self, viewHelper):
 		""" Initialize the corrector """
@@ -108,7 +110,10 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			"updated", self.on_conf_updated)
 		self.__eventConfigCleared = self.get_config().connect(
 			"cleared", self.on_conf_cleared)
+		self.__tick_count = 1
 		self.__ask_request()
+		gobject.timeout_add(
+			GrammalecteAutoCorrector.__TICK_DURATION, self.__add_request)
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
@@ -203,8 +208,19 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 	def __ask_request(self):
 		""" Called when request is needed """
 		if not self.__requested:
+			self.__tick_count = self.get_config().get_value(
+				GrammalecteConfig.ANALYZE_WAIT_TICKS)
+
+	def __add_request(self):
+		""" If idle time is enough, execute the request """
+		if self.__store is None:
+			return False
+		if self.__tick_count >= 0:
+			self.__tick_count -= 1
+		if self.__tick_count == 0:
 			self.__requested = True
 			self.__viewHelper.get_analyzer().add_request(self)
+		return True
 
 	def get_config(self):
 		""" Get the configuration for the requester """
