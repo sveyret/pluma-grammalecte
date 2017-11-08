@@ -91,6 +91,11 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		self.__requested = False
 		self.__curBuffer = None
 		self.__store = GErrorStore()
+		analyzer = self.__viewHelper.get_analyzer()
+		self.__eventAnalStartId = analyzer.connect(
+			"analyze-started", self.on_analyze_started)
+		self.__eventAnalFinishId = analyzer.connect(
+			"analyze-finished", self.on_analyze_finished)
 		view = self.__viewHelper.get_view()
 		view.set_property("has_tooltip", True)
 		self.__eventTooltipId = view.connect(
@@ -99,73 +104,27 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
 			"notify::buffer", self.on_buffer_changed)
-		analyzer = self.__viewHelper.get_analyzer()
-		self.__eventAnalStartId = analyzer.connect(
-			"analyze-started", self.on_analyze_started)
-		self.__eventAnalFinishId = analyzer.connect(
-			"analyze-finished", self.on_analyze_finished)
-		self.ask_request()
+		self.__eventConfigUpdated = self.__viewHelper.get_config().connect(
+			"updated", self.on_conf_updated)
+		self.__eventConfigCleared = self.__viewHelper.get_config().connect(
+			"cleared", self.on_conf_cleared)
+		self.__ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
-		analyzer = self.__viewHelper.get_analyzer()
-		analyzer.disconnect(self.__eventAnalFinishId)
-		analyzer.disconnect(self.__eventAnalStartId)
+		self.__viewHelper.get_config().disconnect(self.__eventConfigUpdated)
+		self.__viewHelper.get_config().disconnect(self.__eventConfigCleared)
 		view = self.__viewHelper.get_view()
 		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
-		view.disconnect(self.__eventTooltipId)
 		self.__bufferData = None
+		view.disconnect(self.__eventTooltipId)
+		analyzer = self.__viewHelper.get_analyzer()
+		analyzer.disconnect(self.__eventAnalFinishId)
+		analyzer.disconnect(self.__eventAnalStartId)
 		self.__store = None
 		self.__curBuffer = None
 		self.__viewHelper = None
-
-	def on_query_tooltip(self, widget, x, y, keyboard, tooltip):
-		""" Manage tooltip query event """
-		if keyboard:
-			buff = widget.get_buffer()
-			pos = buff.get_iter_at_mark(buff.get_insert())
-		else:
-			buffPos = widget.window_to_buffer_coords(gtk.TEXT_WINDOW_TEXT, x, y)
-			pos = widget.get_iter_at_location(*buffPos)
-		line = pos.get_line()
-		offset = pos.get_line_offset()
-		error = self.__store.search((line, offset))
-		if error is not None:
-			tooltip.set_markup(error[GErrorDesc.DESCRIPTION])
-			return True
-		else:
-			return False
-
-	def on_content_changed(self, *ignored):
-		""" Called when buffer content changed """
-		self.ask_request()
-
-	def on_buffer_changed(self, *ignored):
-		""" Called when the buffer was changed """
-		self.__bufferData.terminate()
-		self.__bufferData = _BufferData(
-			self.__viewHelper.get_view().get_buffer(), self.on_content_changed)
-		self.ask_request()
-
-	def ask_request(self):
-		""" Called when request is needed """
-		if not self.__requested:
-			self.__requested = True
-			self.__viewHelper.get_analyzer().add_request(self)
-
-	def get_config(self):
-		""" Get the configuration for the requester """
-		return None if self.__viewHelper is None else \
-			self.__viewHelper.get_config()
-
-	def get_text(self):
-		""" Get the text of the requester """
-		if self.__bufferData is None:
-			return ""
-		self.__curBuffer = self.__bufferData.vBuffer
-		return self.__curBuffer.get_slice(
-			self.__curBuffer.get_start_iter(), self.__curBuffer.get_end_iter())
 
 	def on_analyze_started(self, analyzer, requester):
 		""" Indicate that analyze has started """
@@ -198,4 +157,65 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			iterator.set_line_offset(offset)
 			limits.append(iterator)
 		return limits
+
+	def on_query_tooltip(self, widget, x, y, keyboard, tooltip):
+		""" Manage tooltip query event """
+		if keyboard:
+			buff = widget.get_buffer()
+			pos = buff.get_iter_at_mark(buff.get_insert())
+		else:
+			buffPos = widget.window_to_buffer_coords(gtk.TEXT_WINDOW_TEXT, x, y)
+			pos = widget.get_iter_at_location(*buffPos)
+		line = pos.get_line()
+		offset = pos.get_line_offset()
+		error = self.__store.search((line, offset))
+		if error is not None:
+			tooltip.set_markup(error[GErrorDesc.DESCRIPTION])
+			return True
+		else:
+			return False
+
+	def on_content_changed(self, *ignored):
+		""" Called when buffer content changed """
+		self.__ask_request()
+
+	def on_buffer_changed(self, *ignored):
+		""" Called when the buffer was changed """
+		self.__bufferData.terminate()
+		self.__bufferData = _BufferData(
+			self.__viewHelper.get_view().get_buffer(), self.on_content_changed)
+		self.__ask_request()
+
+	def on_conf_updated(self, config, level, xPath, *ignored):
+		""" Manage the configuration updated event """
+		if xPath in (
+			GrammalecteConfig.AUTO_ANALYZE_ACTIVE,
+			GrammalecteConfig.AUTO_ANALYZE_TIMER,
+			GrammalecteConfig.GRAMMALECTE_OPTIONS_PARAMS,
+			GrammalecteConfig.GRAMMALECTE_OPTIONS_REGEX):
+			return
+		self.__ask_request()
+
+	def on_conf_cleared(self, *ignored):
+		""" Manage the configuration cleared event """
+		self.__ask_request()
+
+	def __ask_request(self):
+		""" Called when request is needed """
+		if not self.__requested:
+			self.__requested = True
+			self.__viewHelper.get_analyzer().add_request(self)
+
+	def get_config(self):
+		""" Get the configuration for the requester """
+		return None if self.__viewHelper is None else \
+			self.__viewHelper.get_config()
+
+	def get_text(self):
+		""" Get the text of the requester """
+		if self.__bufferData is None:
+			return ""
+		self.__curBuffer = self.__bufferData.vBuffer
+		return self.__curBuffer.get_slice(
+			self.__curBuffer.get_start_iter(), self.__curBuffer.get_end_iter())
 

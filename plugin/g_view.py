@@ -54,10 +54,6 @@ class GrammalecteViewHelper(SelfConfigContainer):
 		self.__autocorrect = None
 		if self.is_auto_checked():
 			self.__set_auto_analyze(True)
-		self.__eventConfigUpdated = self.__config.connect(
-			"updated", self.on_conf_updated)
-		self.__eventConfigCleared = self.__config.connect(
-			"cleared", self.on_conf_cleared)
 		self.__eventDocSavedId = self.__document.connect(
 			"saved", self.on_doc_saved)
 		self.__eventDocLoadedId = self.__document.connect(
@@ -67,8 +63,6 @@ class GrammalecteViewHelper(SelfConfigContainer):
 		""" Disconnect the helper from the view """
 		self.__document.disconnect(self.__eventDocLoadedId)
 		self.__document.disconnect(self.__eventDocSavedId)
-		self.__config.disconnect(self.__eventConfigUpdated)
-		self.__config.disconnect(self.__eventConfigCleared)
 		self.__set_auto_analyze(False)
 		self.__config.close()
 		self.__config = None
@@ -95,22 +89,6 @@ class GrammalecteViewHelper(SelfConfigContainer):
 		elif not active and self.__autocorrect is not None:
 			self.__autocorrect.deactivate()
 			self.__autocorrect = None
-
-	def on_conf_updated(self, config, level, xPath, newValue):
-		""" Manage the configuration updated event """
-		if xPath in (
-			GrammalecteConfig.AUTO_ANALYZE_ACTIVE,
-			GrammalecteConfig.AUTO_ANALYZE_TIMER,
-			GrammalecteConfig.GRAMMALECTE_OPTIONS_PARAMS,
-			GrammalecteConfig.GRAMMALECTE_OPTIONS_REGEX):
-			return
-		if self.__autocorrect is not None:
-			self.__autocorrect.ask_request()
-
-	def on_conf_cleared(self, config, level):
-		""" Manage the configuration cleared event """
-		if self.__autocorrect is not None:
-			self.__autocorrect.ask_request()
 
 	def on_doc_saved(self, document, error):
 		""" Manage the document saved event """
