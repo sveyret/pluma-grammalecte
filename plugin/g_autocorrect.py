@@ -104,16 +104,16 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
 			"notify::buffer", self.on_buffer_changed)
-		self.__eventConfigUpdated = self.__viewHelper.get_config().connect(
+		self.__eventConfigUpdated = self.get_config().connect(
 			"updated", self.on_conf_updated)
-		self.__eventConfigCleared = self.__viewHelper.get_config().connect(
+		self.__eventConfigCleared = self.get_config().connect(
 			"cleared", self.on_conf_cleared)
 		self.__ask_request()
 
 	def deactivate(self):
 		""" Disconnect the corrector from the view """
-		self.__viewHelper.get_config().disconnect(self.__eventConfigUpdated)
-		self.__viewHelper.get_config().disconnect(self.__eventConfigCleared)
+		self.get_config().disconnect(self.__eventConfigUpdated)
+		self.get_config().disconnect(self.__eventConfigCleared)
 		view = self.__viewHelper.get_view()
 		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
@@ -158,14 +158,14 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			limits.append(iterator)
 		return limits
 
-	def on_query_tooltip(self, widget, x, y, keyboard, tooltip):
+	def on_query_tooltip(self, view, x, y, keyboard, tooltip):
 		""" Manage tooltip query event """
 		if keyboard:
-			buff = widget.get_buffer()
+			buff = view.get_buffer()
 			pos = buff.get_iter_at_mark(buff.get_insert())
 		else:
-			buffPos = widget.window_to_buffer_coords(gtk.TEXT_WINDOW_TEXT, x, y)
-			pos = widget.get_iter_at_location(*buffPos)
+			buffPos = view.window_to_buffer_coords(gtk.TEXT_WINDOW_TEXT, x, y)
+			pos = view.get_iter_at_location(*buffPos)
 		line = pos.get_line()
 		offset = pos.get_line_offset()
 		error = self.__store.search((line, offset))
