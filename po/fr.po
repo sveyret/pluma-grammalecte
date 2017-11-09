@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-06 14:06+0100\n"
+"POT-Creation-Date: 2017-11-09 21:22+0100\n"
 "PO-Revision-Date: 2017-10-21 21:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -28,6 +28,14 @@ msgstr ""
 #: plugin/g_analyzer.py:304
 msgid "Exception: {}"
 msgstr "Exception : {}"
+
+#: plugin/g_config.py:370
+msgid "Error: configuration file “{}” could not be saved"
+msgstr "Erreur : le fichier de configuration « {} » n'a pas pu être enregistré"
+
+#: plugin/g_config.py:379
+msgid "Error: configuration could not be saved"
+msgstr "Erreur : la configuration n'a pas pu être enregistrée"
 
 #: plugin/g_config_dlg.py:55
 msgid "Configuration"
@@ -53,21 +61,13 @@ msgstr "Préparation des options de Grammalecte..."
 msgid "Check Spelling"
 msgstr "Vérifier l'orthographe"
 
-#: plugin/g_config.py:322
-msgid "Error: configuration file “{}” could not be saved"
-msgstr "Erreur : le fichier de configuration « {} » n'a pas pu être enregistré"
-
-#: plugin/g_config.py:331
-msgid "Error: configuration could not be saved"
-msgstr "Erreur : la configuration n'a pas pu être enregistrée"
-
-#: plugin/g_converter.py:74
+#: plugin/g_converter.py:75
 msgid "Unknown word."
 msgstr "Mot inconnu."
 
 #: plugin/g_window.py:103
-msgid "_Check Syntax..."
-msgstr "_Vérification syntaxique..."
+msgid "Linguistic _Check..."
+msgstr "_Vérification linguistique..."
 
 #: plugin/g_window.py:105
 msgid "Check the current document for incorrect grammar and spelling"
@@ -83,8 +83,8 @@ msgid "Configure the Grammalecte rules"
 msgstr "Configurer les règles de Grammalecte"
 
 #: plugin/g_window.py:115
-msgid "_Autocheck Syntax"
-msgstr "Vérification _automatique"
+msgid "Linguistic _Autocheck"
+msgstr "Vérification linguistique _automatique"
 
 #: plugin/g_window.py:117
 msgid "Automatically grammar and spell-check the current document"

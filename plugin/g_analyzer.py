@@ -31,7 +31,7 @@
 # temps que pluma-grammalecte ; si ce n'est pas le cas, consultez
 # <http://www.gnu.org/licenses>.
 
-""" Manage the grammar analyzis """
+""" Manage the linguistic analyzis """
 
 import gobject
 import json

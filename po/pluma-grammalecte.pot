@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-06 14:06+0100\n"
+"POT-Creation-Date: 2017-11-09 21:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,14 @@ msgstr ""
 
 #: plugin/g_analyzer.py:304
 msgid "Exception: {}"
+msgstr ""
+
+#: plugin/g_config.py:370
+msgid "Error: configuration file “{}” could not be saved"
+msgstr ""
+
+#: plugin/g_config.py:379
+msgid "Error: configuration could not be saved"
 msgstr ""
 
 #: plugin/g_config_dlg.py:55
@@ -51,20 +59,12 @@ msgstr ""
 msgid "Check Spelling"
 msgstr ""
 
-#: plugin/g_config.py:322
-msgid "Error: configuration file “{}” could not be saved"
-msgstr ""
-
-#: plugin/g_config.py:331
-msgid "Error: configuration could not be saved"
-msgstr ""
-
-#: plugin/g_converter.py:74
+#: plugin/g_converter.py:75
 msgid "Unknown word."
 msgstr ""
 
 #: plugin/g_window.py:103
-msgid "_Check Syntax..."
+msgid "Linguistic _Check..."
 msgstr ""
 
 #: plugin/g_window.py:105
@@ -80,7 +80,7 @@ msgid "Configure the Grammalecte rules"
 msgstr ""
 
 #: plugin/g_window.py:115
-msgid "_Autocheck Syntax"
+msgid "Linguistic _Autocheck"
 msgstr ""
 
 #: plugin/g_window.py:117

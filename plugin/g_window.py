@@ -100,7 +100,7 @@ class GrammalecteWindowHelper:
 		self.__actionGroup = gtk.ActionGroup("GrammalecteActions")
 		self.__actionGroup.add_actions([("CheckGrammalecte",
 			gtk.STOCK_SPELL_CHECK,
-			_("_Check Syntax..."),
+			_("Linguistic _Check..."),
 			"<shift>F7",
 			_("Check the current document for incorrect grammar and spelling"),
 			self.on_menu_check),
@@ -112,7 +112,7 @@ class GrammalecteWindowHelper:
 			self.on_menu_config)])
 		self.__actionGroup.add_toggle_actions([('AutoGrammalecte',
 			None,
-			_('_Autocheck Syntax'),
+			_('Linguistic _Autocheck'),
 			None,
 			_("Automatically grammar and spell-check the current document"),
 			self.on_menu_auto)])
