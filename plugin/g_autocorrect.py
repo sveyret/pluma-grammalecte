@@ -175,7 +175,8 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		offset = pos.get_line_offset()
 		error = self.__store.search((line, offset))
 		if error is not None:
-			tooltip.set_markup(error[GErrorDesc.DESCRIPTION])
+			tooltip.set_markup(error[GErrorDesc.CONTEXT] + "\n" + \
+				error[GErrorDesc.DESCRIPTION])
 			return True
 		else:
 			return False
