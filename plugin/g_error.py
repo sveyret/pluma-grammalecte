@@ -37,8 +37,8 @@
 	Errors are simple dictionnaries containing the following values:
 	start: a tuple containing line, offset of the start of error,
 	end: a tuple containing line, offset of the end of error,
-	context: a string in pango markup containing error context,
-	description: a string in pango markup containing error description,
+	context: a tuple of 3 strings containing error context,
+	description: a string containing error description,
 	url: a string containing an URL to a web site giving explainations on the
 		error, this may be None if no URL for the given error,
 	suggestions: a list containing the replacement suggestions, this may be an

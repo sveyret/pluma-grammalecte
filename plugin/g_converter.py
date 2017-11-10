@@ -57,11 +57,8 @@ class GErrorConverter:
 	"""
 		Convert errors from JSON analyzer format to internal format.
 	"""
-
 	__SPELL_PARAM = GrammalecteConfig.ANALYZE_OPTIONS + "/" \
 		+ GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING
-	__CTXT = "{}<span foreground=\"red\" style=\"italic\">{}</span>{}"
-	__DESC = "<span foreground=\"blue\" weight=\"bold\">{}</span>"
 
 	def __init__(self, config):
 		"""
@@ -102,12 +99,11 @@ class GErrorConverter:
 			:rtype: dict
 		"""
 		error = self.__buildPositionsError(gError)
-		error[GErrorDesc.CONTEXT] = GErrorConverter.__CTXT.format(
+		error[GErrorDesc.CONTEXT] = (
 			gError[_GJsonEntry.BEFORE],
 			gError[_GJsonEntry.WORD],
 			gError[_GJsonEntry.AFTER])
-		error[GErrorDesc.DESCRIPTION] = GErrorConverter.__DESC.format(
-			gError[_GJsonEntry.MESSAGE])
+		error[GErrorDesc.DESCRIPTION] = gError[_GJsonEntry.MESSAGE]
 		url = gError[_GJsonEntry.URL]
 		error[GErrorDesc.URL] = None if url == "" else url
 		error[GErrorDesc.SUGGESTIONS] = gError[_GJsonEntry.SUGGESTIONS]
@@ -125,12 +121,8 @@ class GErrorConverter:
 			:rtype: dict
 		"""
 		error = self.__buildPositionsError(gError)
-		error[GErrorDesc.CONTEXT] = GErrorConverter.__CTXT.format(
-			"",
-			gError[_GJsonEntry.SPELL_WORD],
-			"")
-		error[GErrorDesc.DESCRIPTION] = GErrorConverter.__DESC.format(
-			self.__spellDescription)
+		error[GErrorDesc.CONTEXT] = ("", gError[_GJsonEntry.SPELL_WORD], "")
+		error[GErrorDesc.DESCRIPTION] = self.__spellDescription
 		error[GErrorDesc.URL] = None
 		error[GErrorDesc.SUGGESTIONS] = []
 		error[GErrorDesc.OPTION] = \

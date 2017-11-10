@@ -86,6 +86,8 @@ class _BufferData:
 class GrammalecteAutoCorrector(GrammalecteRequester):
 	""" The automatic corrector """
 	__TICK_DURATION = 100
+	__TOOLTIP = "{1}<span foreground=\"red\" style=\"italic\">{2}</span>{3}" \
+		+ "\n<span foreground=\"blue\" weight=\"bold\">{0}</span>"
 
 	def __init__(self, viewHelper):
 		""" Initialize the corrector """
@@ -175,8 +177,8 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		offset = pos.get_line_offset()
 		error = self.__store.search((line, offset))
 		if error is not None:
-			tooltip.set_markup(error[GErrorDesc.CONTEXT] + "\n" + \
-				error[GErrorDesc.DESCRIPTION])
+			tooltip.set_markup(GrammalecteAutoCorrector.__TOOLTIP.format(
+				error[GErrorDesc.DESCRIPTION], *error[GErrorDesc.CONTEXT]))
 			return True
 		else:
 			return False
