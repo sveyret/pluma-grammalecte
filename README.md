@@ -94,16 +94,19 @@ Les paramètres configurables sont les suivants :
 * `locale-dir` contient le chemin vers le répertoire des traductions ;
 * `analyze-options` contient les options d'analyse et leurs valeurs ;
 * `auto-analyze-active` indique si la vérification automatique est activée ou non ;
-* `auto-analyze-timer`<sup>*</sup> contient la fréquence de rafraichissement pour l'analyse automatique ;
-* `analyze-wait-ticks`<sup>*</sup> contient la durée de carence (en dixièmes de seconde) sans évènement avant de lancer l'analyse automatique ;
+* `auto-analyze-timer`<sup>1</sup> contient la fréquence de rafraichissement pour l'analyse automatique ;
+* `analyze-wait-ticks`<sup>1</sup> contient la durée de carence (en dixièmes de seconde) sans évènement avant de lancer l'analyse automatique ;
+* `ign-rules`<sup>2</sup> contient les règles qui sont ignorés par Grammalecte ;
+* `ign-errors`<sup>2</sup> contient les erreurs (orthographe ou grammaire) qui doivent être ignorés ;
 * `g-python-exe` contient l'exécutable Python 3, utilisé pour Grammalecte (utile si votre installation Python 3 n'est pas dans le PATH ou a un nom particulier) ;
 * `g-cli` contient le chemin complet vers la ligne de commande de Grammalecte ;
-* `g-cli-params`<sup>*</sup> contient des paramètres à utiliser avec la ligne de commande de Grammalecte ;
-* `g-analyze-params`<sup>*</sup> contient les paramètres utilisés pour l'analyse par Grammalecte ;
-* `g-options-params`<sup>*</sup> contient les paramètres utilisés pour la recherche des options de Grammalecte ;
-* `g-options-regex`<sup>*</sup> est l'expression rationnelle permettant l'extraction des résultats de Grammalecte pour la recherche des options.
+* `g-cli-params`<sup>1</sup> contient des paramètres à utiliser avec la ligne de commande de Grammalecte ;
+* `g-analyze-params`<sup>1</sup> contient les paramètres utilisés pour l'analyse par Grammalecte ;
+* `g-options-params`<sup>1</sup> contient les paramètres utilisés pour la recherche des options de Grammalecte ;
+* `g-options-regex`<sup>1</sup> est l'expression rationnelle permettant l'extraction des résultats de Grammalecte pour la recherche des options.
 
-Note : les options marquées d'un <sup>*</sup> sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
+[1] Ces options sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
+[2] Ces options se cumulent au niveau des différents fichiers, c'est-à-dire que les tableaux définis à un niveau du dessus sont complétés et non remplacés par ceux du niveau inférieur.
 
 # À faire
 

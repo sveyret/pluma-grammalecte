@@ -196,6 +196,34 @@ class DictConfig(gobject.GObject):
 		"""
 		self.emit("cleared", level + 1, xPath, newValue)
 
+	def get_all_values(self, xPath):
+		"""
+			Get and concatenate the values corresponding to the given xPath.
+
+			The values are first searched in the current configuration, then
+			in parent configurations. All parent values not in current
+			configuration are append to the value of the current configuration.
+
+			Only list values can be concatenated. Top-most parent must have the
+			value set (at least to an empty list)
+
+			:param xPath: the xPath-like query to reach the values.
+			:type xPath: str
+			:return: the values at matching position.
+			:rtype: any
+		"""
+		result = self.__find(xPath)
+		if self.__parent is not None:
+			pResult = self.__parent.get_all_values(xPath)
+			if result is None:
+				result = pResult
+			elif type(result) is not list:
+				raise AttributeError
+			for key in pResult:
+				if key not in result:
+					result.append(key)
+		return result
+
 	def get_value(self, xPath):
 		"""
 			Get the value corresponding to the given xPath.
@@ -238,6 +266,37 @@ class DictConfig(gobject.GObject):
 			for key in value:
 				keys.add(key)
 		return keys
+
+	def add_value(self, xPath, value, level = 0):
+		"""
+			Add the value at the given xPath.
+
+			If the path to the value does not exist, it is created, unless it
+			is a list. The update is made on the parent at given level. A level
+			of 0 means to modify this configuration, 1 is for this parent's
+			configuration, 2 is for this grand-parent's, etc.
+
+			The xPath must point to a list. If there is no value for the given
+			xPath, a new empty list is created. The given value is added to the
+			list.
+
+			:param xPath: the xPath-like query to reach the value.
+			:param value: the value to add at given position.
+			:param level: (optional) the parent level.
+			:type xPath: str
+			:type newValue: any
+			:type level: int
+		"""
+		if level == 0:
+			currentValue = self.__find(xPath)
+			if currentValue is None:
+				currentValue = []
+			elif type(currentValue) is not list:
+				raise AttributeError
+			currentValue.append(value)
+			self.set_value(xPath, currentValue)
+		elif self.__parent is not None:
+			self.__parent.add_value(xPath, value, level - 1)
 
 	def set_value(self, xPath, newValue, level = 0):
 		"""
@@ -406,6 +465,8 @@ class GrammalecteConfig(DictConfig):
 	AUTO_ANALYZE_ACTIVE = "auto-analyze-active"
 	AUTO_ANALYZE_TIMER = "auto-analyze-timer"
 	ANALYZE_WAIT_TICKS = "analyze-wait-ticks"
+	IGNORED_RULES = "ign-rules"
+	IGNORED_ERRORS = "ign-errors"
 	GRAMMALECTE_PYTHON_EXE = "g-python-exe"
 	GRAMMALECTE_CLI = "g-cli"
 	GRAMMALECTE_ANALYZE_PARAMS = "g-analyze-params"
@@ -416,9 +477,11 @@ class GrammalecteConfig(DictConfig):
 	__CLI_FILE = "file"
 	__CLI_OPTS_ON = "on"
 	__CLI_OPTS_OFF = "off"
+	__CLI_RULE_OFF = "roff"
 	GRAMMALECTE_CLI_FILE = __CLI_PARAMS + "/" + __CLI_FILE
 	GRAMMALECTE_CLI_OPTS_ON = __CLI_PARAMS + "/" + __CLI_OPTS_ON
 	GRAMMALECTE_CLI_OPTS_OFF = __CLI_PARAMS + "/" + __CLI_OPTS_OFF
+	GRAMMALECTE_CLI_RULES_OFF = __CLI_PARAMS + "/" + __CLI_RULE_OFF
 
 	GRAMMALECTE_OPTION_SPELLING = "_orth_"
 
@@ -427,12 +490,15 @@ class GrammalecteConfig(DictConfig):
 		AUTO_ANALYZE_ACTIVE: False,
 		AUTO_ANALYZE_TIMER: 500,
 		ANALYZE_WAIT_TICKS: 12,
+		IGNORED_RULES: [],
+		IGNORED_ERRORS: [],
 		GRAMMALECTE_PYTHON_EXE: "python3",
 		GRAMMALECTE_CLI: "/opt/grammalecte/cli.py",
 		__CLI_PARAMS: {
 			__CLI_FILE: "-f",
 			__CLI_OPTS_ON: "-on",
-			__CLI_OPTS_OFF: "-off"
+			__CLI_OPTS_OFF: "-off",
+			__CLI_RULE_OFF: "-roff"
 		},
 		GRAMMALECTE_ANALYZE_PARAMS: ["-j", "-cl", "-owe", "-ctx"],
 		GRAMMALECTE_OPTIONS_PARAMS: ["-lo"],

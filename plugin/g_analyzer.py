@@ -223,6 +223,12 @@ class _StateWaiting(_State):
 				GrammalecteConfig.GRAMMALECTE_CLI_OPTS_OFF))
 		for option in optionOff:
 			params.append(option)
+		options = config.get_all_values(GrammalecteConfig.IGNORED_RULES)
+		if len(options) > 0:
+			params.append(config.get_value(
+				GrammalecteConfig.GRAMMALECTE_CLI_RULES_OFF))
+		for option in options:
+			params.append(option)
 
 class _StateAnalyzing(_State):
 	"""
