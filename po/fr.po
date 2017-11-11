@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pluma-grammalecte 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-09 21:22+0100\n"
+"POT-Creation-Date: 2017-11-11 16:54+0100\n"
 "PO-Revision-Date: 2017-10-21 21:46+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: plugin/g_analyzer.py:251 plugin/g_config_dlg.py:140
+#: plugin/g_analyzer.py:257 plugin/g_config_dlg.py:140
 msgid ""
 "Error: Grammalecte process did not terminate properly:\n"
 "{}"
@@ -25,15 +25,15 @@ msgstr ""
 "Erreur : le processus Grammalecte ne s'est pas terminé correctement :\n"
 "{}"
 
-#: plugin/g_analyzer.py:304
+#: plugin/g_analyzer.py:310
 msgid "Exception: {}"
 msgstr "Exception : {}"
 
-#: plugin/g_config.py:370
+#: plugin/g_config.py:461
 msgid "Error: configuration file “{}” could not be saved"
 msgstr "Erreur : le fichier de configuration « {} » n'a pas pu être enregistré"
 
-#: plugin/g_config.py:379
+#: plugin/g_config.py:470
 msgid "Error: configuration could not be saved"
 msgstr "Erreur : la configuration n'a pas pu être enregistrée"
 
@@ -61,9 +61,37 @@ msgstr "Préparation des options de Grammalecte..."
 msgid "Check Spelling"
 msgstr "Vérifier l'orthographe"
 
-#: plugin/g_converter.py:75
+#: plugin/g_converter.py:73
 msgid "Unknown word."
 msgstr "Mot inconnu."
+
+#: plugin/g_popup.py:52
+msgid "_Suggestions"
+msgstr "_Suggestions"
+
+#: plugin/g_popup.py:64
+msgid "(no suggestions)"
+msgstr "(pas de suggestions)"
+
+#: plugin/g_popup.py:76
+msgid "_More"
+msgstr "_Plus"
+
+#: plugin/g_popup.py:92
+msgid "Ignore _rule"
+msgstr "Ignorer la _règle"
+
+#: plugin/g_popup.py:98
+msgid "Ignore _error"
+msgstr "Ignorer l'_erreur"
+
+#: plugin/g_popup.py:104
+msgid "_Add"
+msgstr "_Ajouter"
+
+#: plugin/g_popup.py:114
+msgid "_See the rule"
+msgstr "_Voir la règle"
 
 #: plugin/g_window.py:103
 msgid "Linguistic _Check..."
@@ -92,5 +120,5 @@ msgstr ""
 "Vérifie automatiquement la grammaire et l'orthographe du document actuel"
 
 #: plugin/g_window.py:131
-msgid "Grammar checking in progress..."
-msgstr "Vérification grammaticale en cours..."
+msgid "Linguistic checking in progress..."
+msgstr "Vérification linguistique en cours..."

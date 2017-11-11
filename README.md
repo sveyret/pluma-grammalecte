@@ -75,11 +75,20 @@ Exemple :
 
 ## Vérification automatique
 
-Lorsque la vérification automatique est activée, le greffon souligne en temps réel les erreurs d'orthographe ou grammaire dans _pluma_. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
+Lorsque la vérification automatique est activée, le greffon souligne en temps réel les erreurs d'orthographe ou grammaire dans _pluma_. Lorsque le curseur de la souris survole une erreur, une bulle d'information est affiché pour expliquer le problème détecté. Pour activer ou désactiver la vérification automatique, utilisez l'option « Vérification linguistique automatique » dans le menu « Outils ». Par défaut, l'option est désactivée, mais si vous l'activez pour un fichier donné, elle le restera pour ce fichier, même après sa fermeture.
+
+## Menu contextuel
+
+Lorsque le curseur est sur une erreur, l'éventuel menu contextuel est enrichi d'un nouveau sous-menu « Suggestions ». Ce sous-menu contient les options suivantes :
+* la liste des suggestions liées à l'erreur, afin de remplacer l'erreur par une proposition ;
+* `Ignorer la règle` qui permet de signaler à Grammalecte de ne plus afficher d'erreur par rapport à cette règle de grammaire dans le document en cours ;
+* `Ignorer l'erreur` pour que cette erreur ne soit plus signalée dans le document en cours (si un même contexte d'erreur est trouvé plusieurs fois dans le fichier, il sera ignoré à chaque fois — le contexte d'erreur correspond à ce qui est affiché dans l'info-bulle lorsque le curseur survole l'erreur) ;
+* `Ajouter` permet d'ajouter l'erreur dans le dictionnaire personnel afin qu'elle ne soit plus détectée quel que soit le document (l'action est en fait la même que pour `Ignorer l'erreur` mais la configuration est enregistrée dans la configuration de l'utilisateur et non dans les métadonnées du fichier) ;
+* `Voir la règle` ouvre une page Internet si un lien est fourni avec la règle de grammaire.
 
 ## Configurer
 
-Pour sélectionner les options utilisées avec Grammalecte, vous pouvez aller dans le menu « Outils » et choisir l'option « Configurer Grammalecte... ». Une fenêtre présente alors les options disponibles que vous pouvez cocher ou non. Notez que vous pouvez sélectionner des options différentes par défaut (en choisissant « Global ») et pour le fichier en cours (en choisissant son nom). Les options globales seront enregistrées dans votre configuration utilisateur, tandis que les options spécifiques au fichier se retrouveront dans ses métadonnées. Il est possible de supprimer toute la configuration d'un fichier depuis cette boite de dialogue à l'aide du bouton « Effacer ».
+Pour sélectionner les options utilisées avec Grammalecte, vous pouvez aller dans le menu « Outils » et choisir l'option « Configurer Grammalecte... ». Une fenêtre présente alors les options disponibles que vous pouvez cocher ou non. Notez que vous pouvez sélectionner des options différentes par défaut (en choisissant « Global ») et pour le fichier en cours (en choisissant son nom). Les options globales seront enregistrées dans votre configuration utilisateur, tandis que les options spécifiques au fichier se retrouveront dans ses métadonnées. Il est possible de supprimer toute la configuration (options spécifiques, règles ou erreurs ignorées, etc.) d'un fichier depuis cette boite de dialogue à l'aide du bouton « Effacer ».
 
 # Configuration
 
@@ -113,11 +122,14 @@ Les paramètres configurables sont les suivants :
 ## Version 0.4
 
 - [x] Afficher une info-bulle sur les erreurs.
-- [ ] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
+- [x] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
 - [x] Mettre un temps de non-réponse pour cumuler les modifications.
 
 ## Version 1.0
 
+- [ ] Ajouter un moyen d'éditer le « dictionnaire personnel ».
+- [ ] Lors d'un remplacement de mot, supprimer l'erreur du stock et ajuster le stock pour prendre en compte le décalage au niveau des caractères (ajoutés ou supprimés selon la longueur du mot de remplacement).
+- [ ] Ajouter des suggestions pour les fautes d'orthographe.
 - [ ] Ajouter une correction interactive.
 
 ## Autre

@@ -128,7 +128,7 @@ class GrammalecteWindowHelper:
 
 	def on_analyze_started(self, *ignored):
 		self.__statusBar.push(
-			self.__sbContext, _("Grammar checking in progress..."))
+			self.__sbContext, _("Linguistic checking in progress..."))
 
 	def on_analyze_finished(self, *ignored):
 		self.__statusBar.pop(self.__sbContext)

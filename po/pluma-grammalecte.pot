@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: pluma-grammalecte 0.3\n"
+"Project-Id-Version: pluma-grammalecte 0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-09 21:22+0100\n"
+"POT-Creation-Date: 2017-11-11 16:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: plugin/g_analyzer.py:251 plugin/g_config_dlg.py:140
+#: plugin/g_analyzer.py:257 plugin/g_config_dlg.py:140
 msgid ""
 "Error: Grammalecte process did not terminate properly:\n"
 "{}"
 msgstr ""
 
-#: plugin/g_analyzer.py:304
+#: plugin/g_analyzer.py:310
 msgid "Exception: {}"
 msgstr ""
 
-#: plugin/g_config.py:370
+#: plugin/g_config.py:461
 msgid "Error: configuration file “{}” could not be saved"
 msgstr ""
 
-#: plugin/g_config.py:379
+#: plugin/g_config.py:470
 msgid "Error: configuration could not be saved"
 msgstr ""
 
@@ -59,8 +59,36 @@ msgstr ""
 msgid "Check Spelling"
 msgstr ""
 
-#: plugin/g_converter.py:75
+#: plugin/g_converter.py:73
 msgid "Unknown word."
+msgstr ""
+
+#: plugin/g_popup.py:52
+msgid "_Suggestions"
+msgstr ""
+
+#: plugin/g_popup.py:64
+msgid "(no suggestions)"
+msgstr ""
+
+#: plugin/g_popup.py:76
+msgid "_More"
+msgstr ""
+
+#: plugin/g_popup.py:92
+msgid "Ignore _rule"
+msgstr ""
+
+#: plugin/g_popup.py:98
+msgid "Ignore _error"
+msgstr ""
+
+#: plugin/g_popup.py:104
+msgid "_Add"
+msgstr ""
+
+#: plugin/g_popup.py:114
+msgid "_See the rule"
 msgstr ""
 
 #: plugin/g_window.py:103
@@ -88,5 +116,5 @@ msgid "Automatically grammar and spell-check the current document"
 msgstr ""
 
 #: plugin/g_window.py:131
-msgid "Grammar checking in progress..."
+msgid "Linguistic checking in progress..."
 msgstr ""

@@ -40,6 +40,7 @@ from g_config import GrammalecteConfig
 from g_analyzer import GrammalecteRequester, GrammalecteAnalyzer
 from g_converter import GErrorConverter
 from g_error import GErrorDesc, GErrorStore
+from g_popup import GPopupMenu
 
 class _BufferData:
 	""" The data for the current buffer """
@@ -104,6 +105,12 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		view.set_property("has_tooltip", True)
 		self.__eventTooltipId = view.connect(
 			"query-tooltip", self.on_query_tooltip)
+		self.__menuPosition = view.get_buffer().get_start_iter()
+		self.__eventMouseClicked = view.connect(
+			"button-press-event", self.on_mouse_clicked)
+		self.__eventPopupMenu = view.connect("popup-menu", self.on_popup_menu)
+		self.__eventPopulatePopup = view.connect(
+			"populate-popup", self.on_populate_popup)
 		self.__bufferData = _BufferData(
 			view.get_buffer(), self.on_content_changed)
 		self.__eventBufferId = view.connect(
@@ -125,6 +132,10 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		view.disconnect(self.__eventBufferId)
 		self.__bufferData.terminate()
 		self.__bufferData = None
+		view.disconnect(self.__eventPopulatePopup)
+		view.disconnect(self.__eventPopupMenu)
+		view.disconnect(self.__eventMouseClicked)
+		self.__menuPosition = None
 		view.disconnect(self.__eventTooltipId)
 		analyzer = self.__viewHelper.get_analyzer()
 		analyzer.disconnect(self.__eventAnalFinishId)
@@ -142,25 +153,25 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 	def on_analyze_finished(self, analyzer, requester, result):
 		""" Set the result of the request """
 		if requester is not self or \
-			self.__curBuffer is not self.__bufferData.vBuffer:
+			self.__curBuffer is not self.get_buffer():
 			return
 		self.__bufferData.clear_tags(
 			[self.__bufferData.grammarTag, self.__bufferData.spellingTag])
 		self.__store = GErrorConverter(self.get_config()).convert(result)
 		for error in self.__store:
-			start, end = self.__convert_limits(error)
+			start, end = self.convert_limits(error, self.__curBuffer)
 			tag = self.__bufferData.spellingTag if error[GErrorDesc.OPTION] \
 				== GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING \
 				else self.__bufferData.grammarTag
 			self.__curBuffer.apply_tag(tag, start, end)
 		self.__curBuffer = None
 
-	def __convert_limits(self, error):
+	def convert_limits(self, error, vBuffer):
 		""" Convert the limits from error to iterator """
 		limits = []
 		for limitDesc in [GErrorDesc.START, GErrorDesc.END]:
 			line, offset = error[limitDesc]
-			iterator = self.__curBuffer.get_iter_at_line(line)
+			iterator = vBuffer.get_iter_at_line(line)
 			iterator.set_line_offset(offset)
 			limits.append(iterator)
 		return limits
@@ -182,6 +193,28 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 			return True
 		else:
 			return False
+
+	def on_mouse_clicked(self, view, event):
+		""" Manage the mouse clicked event """
+		if event.button == 3:
+			coords = view.window_to_buffer_coords(
+				gtk.TEXT_WINDOW_TEXT, int(event.x), int(event.y))
+			self.__menuPosition = view.get_iter_at_location(*coords)
+		return False
+
+	def on_popup_menu(self, view):
+		""" Manage the popup menu event """
+		buff = view.get_buffer()
+		self.__menuPosition = buff.get_iter_at_mark(buff.get_insert())
+		return False
+
+	def on_populate_popup(self, view, menu):
+		""" Manage the populate popup event """
+		line = self.__menuPosition.get_line()
+		offset = self.__menuPosition.get_line_offset()
+		error = self.__store.search((line, offset))
+		if error is not None:
+			GPopupMenu(menu, error, self)
 
 	def on_content_changed(self, *ignored):
 		""" Called when buffer content changed """
@@ -234,7 +267,11 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 		""" Get the text of the requester """
 		if self.__bufferData is None:
 			return ""
-		self.__curBuffer = self.__bufferData.vBuffer
+		self.__curBuffer = self.get_buffer()
 		return self.__curBuffer.get_slice(
 			self.__curBuffer.get_start_iter(), self.__curBuffer.get_end_iter())
+
+	def get_buffer(self):
+		""" Get the current buffer """
+		return self.__bufferData.vBuffer
 
