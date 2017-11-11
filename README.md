@@ -119,12 +119,6 @@ Les paramètres configurables sont les suivants :
 
 # À faire
 
-## Version 0.4
-
-- [x] Afficher une info-bulle sur les erreurs.
-- [x] Gérer le clic-droit avec la souris sur les erreurs (suggestions, ignorer, etc.)
-- [x] Mettre un temps de non-réponse pour cumuler les modifications.
-
 ## Version 1.0
 
 - [ ] Ajouter un moyen d'éditer le « dictionnaire personnel ».
