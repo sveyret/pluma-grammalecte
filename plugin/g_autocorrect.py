@@ -169,9 +169,14 @@ class GrammalecteAutoCorrector(GrammalecteRequester):
 	def convert_limits(self, error, vBuffer):
 		""" Convert the limits from error to iterator """
 		limits = []
+		maxLine = vBuffer.get_end_iter().get_line()
 		for limitDesc in [GErrorDesc.START, GErrorDesc.END]:
 			line, offset = error[limitDesc]
+			if line > maxLine:
+				line = maxLine
 			iterator = vBuffer.get_iter_at_line(line)
+			if offset > iterator.get_chars_in_line():
+				offset = iterator.get_chars_in_line()
 			iterator.set_line_offset(offset)
 			limits.append(iterator)
 		return limits
