@@ -67,9 +67,15 @@ class GErrorConverter:
 			:param config: the configuration to use.
 			:type config: GrammalecteConfig
 		"""
+		self.__config = config
 		self.__checkSpell = \
-			config.get_value(GErrorConverter.__SPELL_PARAM) is True
+			self.__config.get_value(GErrorConverter.__SPELL_PARAM) is True
 		self.__spellDescription = _("Unknown word.")
+		self.__ignoredErrors = []
+		self.__usedIgnored = []
+		for ignored in self.__config.get_all_values(
+			GrammalecteConfig.IGNORED_ERRORS):
+			self.__ignoredErrors.append(tuple(ignored))
 
 	def convert(self, analyzerFormat):
 		"""
@@ -80,13 +86,24 @@ class GErrorConverter:
 			:return: the internal format
 			:rtype: GErrorStore
 		"""
-		store = GErrorStore()
+		errors = []
 		for parErrors in analyzerFormat:
 			for grammError in parErrors[_GJsonEntry.GRAMMAR]:
-				store.add(self.__buildGrammError(grammError))
+				errors.append(self.__buildGrammError(grammError))
 			if self.__checkSpell:
 				for spellError in parErrors[_GJsonEntry.SPELLING]:
-					store.add(self.__buildSpellError(spellError))
+					errors.append(self.__buildSpellError(spellError))
+
+		store = GErrorStore()
+		for error in errors:
+			if not self.__ignoreError(error):
+				store.add(error)
+
+		for ignored in self.__ignoredErrors:
+			if not ignored in self.__usedIgnored:
+				self.__config.del_value(
+					GrammalecteConfig.IGNORED_ERRORS, list(ignored))
+
 		return store
 
 	def __buildGrammError(self, gError):
@@ -149,4 +166,21 @@ class GErrorConverter:
 			gError[_GJsonEntry.CHAR_END]
 		)
 		return error
+
+	def __ignoreError(self, error):
+		"""
+			Check if the formated error should be ignored.
+
+			:param error: the formatted error.
+			:type error: dict
+			:return: True if should be ignored, False otherwise.
+			:rtype: bool
+		"""
+		context = error[GErrorDesc.CONTEXT]
+		if context in self.__ignoredErrors:
+			if context not in self.__usedIgnored:
+				self.__usedIgnored.append(context)
+			return True
+		else:
+			return False
 

@@ -293,10 +293,42 @@ class DictConfig(gobject.GObject):
 				currentValue = []
 			elif type(currentValue) is not list:
 				raise AttributeError
-			currentValue.append(value)
-			self.set_value(xPath, currentValue)
+			if value not in currentValue:
+				newValue = list(currentValue)
+				newValue.append(value)
+				self.set_value(xPath, newValue)
 		elif self.__parent is not None:
 			self.__parent.add_value(xPath, value, level - 1)
+
+	def del_value(self, xPath, value, level = 0):
+		"""
+			Delete the value from the given xPath.
+
+			The update is made on the parent at given level. A level of 0 means
+			to modify this configuration, 1 is for this parent's configuration,
+			2 is for this grand-parent's, etc.
+
+			If the value exist, the xPath must point to a list. If there is a
+			value for the given xPath, the given value is removed from the
+			list.
+
+			:param xPath: the xPath-like query to reach the value.
+			:param value: the value to remove from given position.
+			:param level: (optional) the parent level.
+			:type xPath: str
+			:type newValue: any
+			:type level: int
+		"""
+		if level == 0:
+			currentValue = self.__find(xPath)
+			if currentValue is not None:
+				if type(currentValue) is not list:
+					raise AttributeError
+				newValue = list(currentValue)
+				newValue.remove(value)
+				self.set_value(xPath, newValue)
+		elif self.__parent is not None:
+			self.__parent.del_value(xPath, value, level - 1)
 
 	def set_value(self, xPath, newValue, level = 0):
 		"""
