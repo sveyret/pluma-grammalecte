@@ -115,6 +115,7 @@ Les paramètres configurables sont les suivants :
 * `g-options-regex`<sup>1</sup> est l'expression rationnelle permettant l'extraction des résultats de Grammalecte pour la recherche des options.
 
 [1] Ces options sont pour les utilisateurs avertis uniquement, à ne modifier que si vous savez ce que vous faites !
+
 [2] Ces options se cumulent au niveau des différents fichiers, c'est-à-dire que les tableaux définis à un niveau du dessus sont complétés et non remplacés par ceux du niveau inférieur.
 
 # À faire
