@@ -64,7 +64,7 @@ Pour une installation en local, vous pouvez, par exemple, exécuter la commande�
 
     make && make LOCALE_INSTALL=$HOME/.local/share/locale PLUGIN_INSTALL=$HOME/.local/share install
 
-Dans ce dernier cas, il vous faudra modifier la configuration du greffon en éditant (ou créant, si nécessaire) le fichier `$HOME/.config/pluma/grammalecte.conf`. Ce fichier est au format JSON. Les valeurs qui vous seront les plus utiles sont `locale-dir` pour indiquer le répertoire d'installation des traductions et `grammalecte-cli` si votre installation de l'interface de Grammalecte ne se trouve pas à l'emplacement prévu par défaut `/opt/grammalecte/cli.py`.
+Dans ce dernier cas, il vous faudra modifier la configuration du greffon en éditant (ou créant, si nécessaire) le fichier `$HOME/.config/pluma/grammalecte.conf`. Ce fichier est au format JSON. Les valeurs qui vous seront les plus utiles sont `locale-dir` pour indiquer le répertoire d'installation des traductions et `g-cli` si votre installation de l'interface de Grammalecte ne se trouve pas à l'emplacement prévu par défaut `/opt/grammalecte/cli.py`.
 
 Exemple :
 
