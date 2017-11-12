@@ -86,18 +86,17 @@ class GErrorConverter:
 			:return: the internal format
 			:rtype: GErrorStore
 		"""
-		errors = []
+		store = GErrorStore()
 		for parErrors in analyzerFormat:
 			for grammError in parErrors[_GJsonEntry.GRAMMAR]:
-				errors.append(self.__buildGrammError(grammError))
+				error = self.__convertError(grammError)
+				if not self.__ignoreError(error):
+					store.add(error)
 			if self.__checkSpell:
 				for spellError in parErrors[_GJsonEntry.SPELLING]:
-					errors.append(self.__buildSpellError(spellError))
-
-		store = GErrorStore()
-		for error in errors:
-			if not self.__ignoreError(error):
-				store.add(error)
+					error = self.__convertError(spellError)
+					if not self.__ignoreError(error):
+						store.add(error)
 
 		for ignored in self.__ignoredErrors:
 			if not ignored in self.__usedIgnored:
@@ -106,52 +105,11 @@ class GErrorConverter:
 
 		return store
 
-	def __buildGrammError(self, gError):
+	def __convertError(self, gError):
 		"""
-			Build a formated error based on analyze result grammar error.
+			Build a formated error based on analyze result error.
 
-			:param gError: the grammar error.
-			:type gError: dict
-			:return: the formated error
-			:rtype: dict
-		"""
-		error = self.__buildPositionsError(gError)
-		error[GErrorDesc.CONTEXT] = (
-			gError[_GJsonEntry.BEFORE],
-			gError[_GJsonEntry.WORD],
-			gError[_GJsonEntry.AFTER])
-		error[GErrorDesc.DESCRIPTION] = gError[_GJsonEntry.MESSAGE]
-		url = gError[_GJsonEntry.URL]
-		error[GErrorDesc.URL] = None if url == "" else url
-		error[GErrorDesc.SUGGESTIONS] = gError[_GJsonEntry.SUGGESTIONS]
-		error[GErrorDesc.OPTION] = gError[_GJsonEntry.OPTION]
-		error[GErrorDesc.RULE] = gError[_GJsonEntry.RULE]
-		return error
-
-	def __buildSpellError(self, gError):
-		"""
-			Build a formated error based on analyze result spelling error.
-
-			:param gError: the spelling error.
-			:type gError: dict
-			:return: the formated error
-			:rtype: dict
-		"""
-		error = self.__buildPositionsError(gError)
-		error[GErrorDesc.CONTEXT] = ("", gError[_GJsonEntry.SPELL_WORD], "")
-		error[GErrorDesc.DESCRIPTION] = self.__spellDescription
-		error[GErrorDesc.URL] = None
-		error[GErrorDesc.SUGGESTIONS] = []
-		error[GErrorDesc.OPTION] = \
-			GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING
-		error[GErrorDesc.RULE] = None
-		return error
-
-	def __buildPositionsError(self, gError):
-		"""
-			Build a formated error with only start and end positions.
-
-			:param gError: the spelling error.
+			:param gError: the error.
 			:type gError: dict
 			:return: the formated error
 			:rtype: dict
@@ -165,7 +123,47 @@ class GErrorConverter:
 			gError[_GJsonEntry.LINE_END] - 1,
 			gError[_GJsonEntry.CHAR_END]
 		)
+		before = self.__extract(gError, _GJsonEntry.BEFORE, "")
+		after = self.__extract(gError, _GJsonEntry.AFTER, "")
+		word = self.__extract(
+			gError, _GJsonEntry.WORD, _GJsonEntry.SPELL_WORD, True)
+		error[GErrorDesc.CONTEXT] = (before, word, after)
+		error[GErrorDesc.DESCRIPTION] = self.__extract(
+			gError, _GJsonEntry.MESSAGE, self.__spellDescription)
+		url = self.__extract(gError, _GJsonEntry.URL, "")
+		error[GErrorDesc.URL] = None if url == "" else url
+		error[GErrorDesc.SUGGESTIONS] = self.__extract(
+			gError, _GJsonEntry.SUGGESTIONS, [])
+		error[GErrorDesc.OPTION] = self.__extract(
+			gError,
+			_GJsonEntry.OPTION,
+			GrammalecteConfig.GRAMMALECTE_OPTION_SPELLING)
+		error[GErrorDesc.RULE] = self.__extract(
+			gError, _GJsonEntry.RULE, None)
 		return error
+
+	def __extract(self, gError, key, default, defaultIsKey = False):
+		"""
+			See if the key exists in the given error, give default if not.
+
+			:param gError: the Grammalecte error.
+			:param key: the name of the key to search.
+			:param default: the value to use if key is not in error.
+			:param defaultIsKey: indicate if default is another key to search
+				in error.
+			:type gError: dict
+			:type key: str
+			:type default: str
+			:type defaultIsKey: bool
+			:return: the extracted value.
+			:rtype: any
+		"""
+		if key in gError:
+			return gError[key]
+		elif defaultIsKey:
+			return gError[default]
+		else:
+			return default
 
 	def __ignoreError(self, error):
 		"""
